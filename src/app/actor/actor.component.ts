@@ -24,12 +24,12 @@ import { Location, NgOptimizedImage } from '@angular/common';
             width: 100px;
             align-self: flex-start;
             margin: 0rem 1rem;
-            padding: 10px;
+            padding: 15px 5px;
             border-radius: 5px;
             border: none;
             color: azure;
             background: teal;
-            box-shadow: 0px 2px 4px 2px rgb(0, 0, 0, 0.2);
+            box-shadow: 0px 3px 4px 3px rgb(0, 0, 0, 0.3);
             transition: all 0.2s ease;
         }
 

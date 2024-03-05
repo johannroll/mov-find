@@ -177,7 +177,7 @@ export default class HomeComponent {
     }
     
     scrollPosition() {
-        return window.scrollY + 650;
+        return window.scrollY;
     }
 
     // private fb = inject(FormBuilder);

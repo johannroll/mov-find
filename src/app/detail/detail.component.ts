@@ -19,7 +19,6 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     standalone : true,
     styles: [
         `
-
         .movie-detail-container {
             display: flex;
             max-width: 800px;
@@ -39,7 +38,12 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         .released, .rating, .language, .cast-text {
             padding-left: 12px;
             padding-right: 12px;
-        } 
+            padding-bottom: 5px;
+        }
+        
+        .cast-text {
+            padding-top: 1rem;
+        }
 
         .btn-back {
             position: fixed;
@@ -47,13 +51,13 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
             width: 100px;
             align-self: flex-start;
             margin: 0rem 12px;
-            padding: 10px;
+            padding: 15px 5px;
             border-radius: 5px;
             border: none;
             color: azure;
             background: teal;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 4px 2px rgb(0, 0, 0, 0.2);
+            box-shadow: 0 3px 4px 3px rgb(0, 0, 0, 0.3);
             z-index: 10;
         }
 
@@ -91,7 +95,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         }
 
         .provider {
-            margin-right: 10px;
+            margin-left: 10px;
             border-radius: 10px;
         }
 
@@ -106,9 +110,8 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         }
         
         .actor {
-            width: 60px;
-           
-           
+            height: 100px;
+            width: 100px;
 
         }
 
@@ -116,6 +119,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
             border-radius: 5px;
             box-shadow: 0  3px 5px rgb(0,0,0,0.4);
             transition: all 0.2s ease;
+            object-fit: cover;
         }
 
         .actor-img:hover {
@@ -126,9 +130,10 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         .actor-name {
             font-size: 0.85rem;
             font-weight: 300;
-            inline-size: 10ch;
+            inline-size: 16ch;
             overflow-wrap: break-word; 
             color: rgb(215,215,215);
+            margin-top: -7px;
         }
 
         .video-container {
@@ -138,8 +143,8 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
             justify-content: center;
             padding-top: 2rem;
             padding-bottom: 2rem;
-            overflow-y: auto;
-          
+            margin-bottom: 2rem;
+            overflow-y: auto;       
 
         }
 
@@ -154,11 +159,13 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
             max-width: 100%;
             display: flex;
             justify-content: space-between;
+            margin-top: 1.5rem;
             
         }
 
         mat-form-field {
-            margin-right: 3px;
+            
+            margin-left: 12px;
             margin-top: 5px;
             max-width: 100%;    
         }
@@ -174,13 +181,20 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         }
 
         .slick-slider {
-            width: 83%;
-            margin-inline: auto;
-           
-           
+            max-width: 800px;
+            width: 80%;
+            margin-inline: auto; 
+            margin-bottom: 2rem;
         }
 
-        @media (max-width: 750px) {
+        .slide {
+            padding: 0px 2px;
+        }
+        .slide a {
+            padding: 1px;
+        }
+
+        @media (max-width: 824px) {
             .movie-detail-container {
                 display: flex;
                 flex-direction: column;
@@ -207,10 +221,17 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
             }
 
             .provider-container {
-                padding-left: 12px;
-                padding-right: 12px;
+                margin-top: 1rem;
+                
+                justify-content: center;
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;  
             }
 
+            .provider {
+                margin-left: 0px;
+            }
            
         }
 
@@ -223,10 +244,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
                 margin-right: 0px;
             }
 
-            .movie-details {
-               
-            }
-
+            
         }
         `
     ],
@@ -290,46 +308,35 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
                         
                                 <span class="provider-container">
                                     @for (provider of movieService.movieDetail()[2].results[country()][type()]; track $index) {
-                                        <img class="provider" ngSrc="https://image.tmdb.org/t/p/original{{provider.logo_path}}" width="40" height="40" />
+                                        <img class="provider" ngSrc="https://image.tmdb.org/t/p/original{{provider.logo_path}}" width="50" height="50" />
                                     }
                                 </span>
 
                             } 
-                            <p class="cast-text">Cast</p>
-                            <!-- <span class="cast">
-                                @for (actor of movieService.movieDetail()[0]?.cast; track actor.id) {
-                                    @if (actor.order < 8) {
-                                        <div class="actor" >
-                                            <a routerLink="/actor/{{actor.id}}">
-                                                <img (click)="movieService.actorId$.next(actor.id)" class="actor-img" priority [ngSrc]="actor.profile_path !== null ? 'https://image.tmdb.org/t/p/w300/' + actor.profile_path : 'https://fakeimg.pl/600x750?text=No+image'" width="75" height="105"/>
-                                            </a>
-                                        </div>
-                                    }
-                                }
-                            </span> -->
-                            <div class="carousel-wrapper">
-                                <ngx-slick-carousel class="carousel"
-                                    #slickModal="slick-carousel"
-                                    [config]="slideConfig"
-                                    (init)="slickInit($event)"
-                                    (breakpoint)="breakpoint($event)"
-                                    (afterChange)="afterChange($event)"
-                                    (beforeChange)="beforeChange($event)">
-                                    @for (actor of movieService.movieDetail()[0]?.cast; track actor.id) {
-                                        @if (actor.order < 10) {
-                                            <div ngxSlickItem class="slide">
-                                                    <a routerLink="/actor/{{actor.id}}">
-                                                        <img (click)="movieService.actorId$.next(actor.id)" class="actor-img" priority [ngSrc]="actor.profile_path !== null ? 'https://image.tmdb.org/t/p/w300/' + actor.profile_path : 'https://fakeimg.pl/600x750?text=No+image'" width="75" height="105"/>
-                                                    </a>
-                                                    <div class="actor-name">{{ actor.name }}</div>
-                                                </div>
-                                            }
-                                        }
-                                </ngx-slick-carousel>
-                            </div>
                         }
                     </div>
                     
+                </div>
+                <p class="cast-text">Cast</p>
+                <div class="carousel-wrapper">
+                    <ngx-slick-carousel class="carousel"
+                        #slickModal="slick-carousel"
+                        [config]="slideConfig"
+                        (init)="slickInit($event)"
+                        (breakpoint)="breakpoint($event)"
+                        (afterChange)="afterChange($event)"
+                        (beforeChange)="beforeChange($event)">
+                        @for (actor of movieService.movieDetail()[0]?.cast; track actor.id) {
+                            @if (actor.order < 10) {
+                                <div ngxSlickItem class="slide">
+                                    <a routerLink="/actor/{{actor.id}}">
+                                        <img (click)="movieService.actorId$.next(actor.id)" class="actor-img" priority [ngSrc]="actor.profile_path !== null ? 'https://image.tmdb.org/t/p/w300/' + actor.profile_path : 'https://fakeimg.pl/600x750?text=No+image'" width="120" height="180"/>
+                                    </a>
+                                    <div class="actor-name">{{ actor.name }}</div>
+                                </div>
+                                }
+                            }
+                    </ngx-slick-carousel>
                 </div>
                 <div class="video-container">
                 @if (!movieService.movieDetailState().loading) {  
@@ -376,8 +383,6 @@ export default class DetailComponent {
 
     params = toSignal(this.route.paramMap);
 
-    url = "https://www.youtube.com/embed/";
-
     // moviedetail = computed(() =>  this.movieService.movieDetailId$.next(Number(this.params()?.get('id'))));
     
     movie = computed(() => this.movieService.movies()
@@ -414,14 +419,58 @@ export default class DetailComponent {
         return languageNames.of(languageCode);
     }
 
-
-    getFirstTrailer(videos: any[]) {
-        return videos.find((video) => video.name === 'Official Trailer');
-    }
-
     //Carousel
 
-    slideConfig = {"slidesToShow": 4, "slidesToScroll": 2};
+    slideConfig = {
+        slidesToShow: 5,
+        slidesToScroll: 2,
+        infinite: false,
+        dots: false,
+        arrows: true,
+        draggable: true,
+        responsive: [
+            {
+                breakpoint: 800,
+                settings: {
+                slidesToShow: 4,
+                dots: false,
+                arrows: false
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                slidesToShow: 4,
+                dots: false,
+                arrows: false
+                }
+            },
+            {
+                breakpoint: 620,
+                settings: {
+                slidesToShow: 3,
+                dots: false,
+                arrows: false
+                }
+            },
+            {
+                breakpoint: 620,
+                settings: {
+                slidesToShow: 3,
+                dots: false,
+                arrows: false
+                }
+            },
+            {
+                breakpoint: 454,
+                settings: {
+                slidesToShow: 2,
+                dots: false,
+                arrows: false
+                }
+            }
+        ]
+    };
   
     slickInit(e: any) {
         console.log('slick initialized');
@@ -438,10 +487,6 @@ export default class DetailComponent {
     beforeChange(e: any) {
         console.log('beforeChange');
     }
-    
-   
-    
-    
        
 }
 
