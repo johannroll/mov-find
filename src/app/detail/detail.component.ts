@@ -1,22 +1,16 @@
 import { Component, OnInit, ViewChild, WritableSignal, computed, inject, signal } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { MoviesService } from "../Services/MoviesService/movies.service";
-import { Movie } from "../shared/interfaces/movie";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
-import { map, tap } from "rxjs";
+
 import { toSignal } from "@angular/core/rxjs-interop";
 import { YouTubePlayer } from "@angular/youtube-player";
-import { NgxYoutubePlayerModule, YouTubePlayerRef, YoutubePlayerComponent, YoutubePlayerService } from "ngx-youtube-player";
-import { VgCoreModule} from "@videogular/ngx-videogular/core"
-import { VgControlsModule} from "@videogular/ngx-videogular/controls"
-import { VgOverlayPlayModule} from "@videogular/ngx-videogular/overlay-play"
-import { VgBufferingModule} from "@videogular/ngx-videogular/buffering"
 import { SafePipe } from "../shared/utils/safe.pipe";
 import { KeyValuePipe } from "@angular/common";
-import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelect, MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 
@@ -366,10 +360,6 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         CommonModule, 
         NgOptimizedImage, 
         YouTubePlayer, 
-        VgCoreModule, 
-        VgControlsModule, 
-        VgOverlayPlayModule, 
-        VgBufferingModule, 
         SafePipe, 
         KeyValuePipe,
         MatFormFieldModule, 

@@ -7,9 +7,9 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
-import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
+
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes, withViewTransitions()), importProvidersFrom(HttpClientModule, LazyLoadImageModule, MatButtonModule, MatMenuModule, NgxYoutubePlayerModule), provideAnimationsAsync()]
+  providers: [provideRouter(routes, withViewTransitions()), importProvidersFrom(HttpClientModule, LazyLoadImageModule, MatButtonModule, MatMenuModule), provideAnimationsAsync()]
 };
