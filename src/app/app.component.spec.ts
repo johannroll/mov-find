@@ -17,7 +17,7 @@ describe('AppComponent', () => {
   it(`should have the 'passing-data-pages' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('passing-data-pages');
+    expect('').toEqual('passing-data-pages');
   });
 
   it('should render title', () => {

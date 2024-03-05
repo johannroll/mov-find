@@ -1,8 +1,15 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideRouter, withViewTransitions } from '@angular/router';
 
 import { routes } from './app.routes';
+import { HttpClientModule } from '@angular/common/http';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatButtonModule } from '@angular/material/button'
+import { MatMenuModule } from '@angular/material/menu'
+import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
+
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
+  providers: [provideRouter(routes, withViewTransitions()), importProvidersFrom(HttpClientModule, LazyLoadImageModule, MatButtonModule, MatMenuModule, NgxYoutubePlayerModule), provideAnimationsAsync()]
 };
