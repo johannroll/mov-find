@@ -6,7 +6,6 @@ import { HttpClient } from "@angular/common/http";
 import { CommonModule, JsonPipe, NgOptimizedImage } from "@angular/common";
 import { toSignal } from "@angular/core/rxjs-interop"
 import { map, tap } from "rxjs/operators";
-import { Lazy } from "swiper";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { Subject } from "rxjs";
 
