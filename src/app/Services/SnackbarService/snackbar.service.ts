@@ -9,8 +9,8 @@ export class SnackbarService {
     snackbar = inject(MatSnackBar);
 
     displaySnackbarMessage(message: string) {
-        this.snackbar.open(message, '', { 
-            duration: 2000,
+        this.snackbar.open(message, 'Undo', { 
+            duration: 2500,
             panelClass: ['custom-snackbar', 'snackbar-success'], 
         });
     }

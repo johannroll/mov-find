@@ -67,7 +67,7 @@ import { MatIconModule } from '@angular/material/icon';
 
     `],
     template: `
-        <button mat-fab color="accent" class="btn-back" (click)="back().back()">
+        <button mat-icon-button color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
         </button>
         <div class="container">

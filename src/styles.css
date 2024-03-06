@@ -64,9 +64,9 @@ a {
 
 .btn-back {
     position: fixed !important;
-    top: 90px;
+    top: 70px;
     align-self: flex-start;
-    margin: 0rem 12px;
+    margin: 0rem 0px;
     border: none;
     color: azure !important;
     z-index: 10;
@@ -74,26 +74,27 @@ a {
 
 .btn-favorite {
     position: fixed !important;
-    top: 90px;
+    bottom: 10px;
     right: 0px;
     align-self: center;
-    margin: 0rem 12px;
+    margin: 0rem 8px;
     border: none;
     z-index: 10;
 }
 
 .mat-mdc-snack-bar-container .mdc-snackbar__surface {
-  border-radius: 4px !important;
+  /* border-radius: 4px !important; */
+  width: 300px !important;
 }
 
-.mat-mdc-button.mat-mdc-snack-bar-action {
+/* .mat-mdc-button.mat-mdc-snack-bar-action {
   color: white !important;
-}
+} */
 
 .mdc-snackbar__surface {
     background-color: #8e9aa0 !important;
 }
 
 .mdc-snackbar__label {
-    color: azure !important;
+    color: rgb(41, 41, 41) !important;
 }

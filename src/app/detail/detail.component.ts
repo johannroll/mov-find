@@ -32,6 +32,8 @@ import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
         }
 
         .movie-description {
+            margin-left: 5px;
+            margin-right: 5px; 
             padding-left: 12px;
             padding-right: 12px;
             font-weight: 300;
@@ -47,6 +49,7 @@ import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
         
         .cast-text {
             padding-top: 1rem;
+            font-size: 1.2rem;
         }
 
         .movie-details {
@@ -227,7 +230,7 @@ import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
             }
 
             mat-form-field {
-                margin-right: 12px;
+                margin-right: 13px;
             }
 
             .slick-slider {
@@ -241,10 +244,10 @@ import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
         `
     ],
     template:`
-        <button mat-fab color="accent" class="btn-back" routerLink="/home">
+        <button mat-icon-button color="accent" class="btn-back" routerLink="/home">
             <mat-icon>arrow_back</mat-icon>
         </button>
-        <button mat-fab color="warn" class="btn-favorite" (click)="snackbarService.displaySnackbarMessage('Added to watchlist')">
+        <button mat-mini-fab color="warn" class="btn-favorite" (click)="snackbarService.displaySnackbarMessage('Added to watchlist')">
             <mat-icon>favorite</mat-icon>
         </button>
         <div class="container">
@@ -395,7 +398,7 @@ export default class DetailComponent {
    type = signal<any>(null);
 
    ngAfterViewInit() {
-      
+       window.scrollTo(0, 0);
        if (this.params()?.get('id') !== null) {
            this.movieService.movieDetailId$.next(Number(this.params()?.get('id')))
        }

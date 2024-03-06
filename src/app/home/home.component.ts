@@ -19,9 +19,9 @@ export interface ScrollState {
     styles: [`
 
         .card {
-            width: 300px;
+            width: 320px;
             display: flex;
-            margin: 1rem;
+            margin: 1rem 1rem;
             flex-direction: column;
             align-items: center;
             background: rgb(58,58,58);
@@ -37,7 +37,7 @@ export interface ScrollState {
 
         
         .image {
-            width: 300px;
+            width: 320px;
             object-fit: cover;
         }
 
@@ -69,6 +69,7 @@ export interface ScrollState {
             .movie-list {
                 grid-template-columns: 1fr; 
             }
+
         }
         
         .movie-list-item {
@@ -135,7 +136,7 @@ export interface ScrollState {
                         @if($index < 4) {
                             <img priority class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500"  >
                         } @else {
-                            <img class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="450" (click)="this.movieService.movieDetailId$.next(+movie.id)" >
+                            <img class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500" (click)="this.movieService.movieDetailId$.next(+movie.id)" >
                         }
                     </div>     
                 }
