@@ -5,9 +5,17 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOption } from '@angular/material/core';
+import { MatLabel } from '@angular/material/form-field';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {AsyncPipe} from '@angular/common';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+
 
 @Component({
   selector: 'app-root',
@@ -19,7 +27,16 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatMenuModule, 
     MatIconModule,
     MatSidenavModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatOption,
+    MatLabel,
+    MatAutocompleteModule,
+    AsyncPipe,
+    ReactiveFormsModule,
+    FormsModule,
+    MatInputModule,
+
   ],
   template: `
 
@@ -55,6 +72,28 @@ import {MatExpansionModule} from '@angular/material/expansion';
             </li>
           </ul>
           <ul class="nav-items category">
+            <li class="search-list-item">
+              <form  class="search-form">
+                <mat-form-field appearance="outline" subscriptsizing="dynamic" color="accent" class="example-full-width">
+                  <mat-label>
+                    Search
+                  </mat-label>
+                  <input matInput
+                        aria-label="State"
+                        [matAutocomplete]="auto"
+                        [formControl]="stateCtrl">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    @for (state of filteredStates | async; track state) {
+                      <mat-option [value]="state.name">
+                        <img alt="" class="example-option-img" [src]="state.flag" height="25">
+                        <span>{{state.name}}</span> |
+                        <small>Population: {{state.population}}</small>
+                      </mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
+            </li>
             @if (movieService.state().genre === null) {
               <li class="selection">
                  <h1>{{ movieService.selection() }}</h1>
@@ -142,9 +181,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
 
     #drawer {
       position: fixed;
-      width: 200px;
+      width: 215px;
       margin-top: 68px;
       padding-top: 1rem;
+      
     }
 
     :host ::ng-deep .mat-drawer-shown {
@@ -165,8 +205,17 @@ import {MatExpansionModule} from '@angular/material/expansion';
       padding: 5px 10px 5px 0px;
     }
 
+    .search-list-item {
+        padding-top: 23px;
+        padding-left: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+
     .nav-items-drawer {
-      width: 100%;
+      max-width: 215px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -232,7 +281,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 
   @media (max-width: 575px) {
     .selection h1 {
-      font-size: 1rem;
+      font-size: 1.125rem;
     }
   }
 
@@ -268,6 +317,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
 export class AppComponent {
   movieService = inject(MoviesService)
   @ViewChild('sidenav') sidenav!: MatSidenav;
+
+  stateCtrl = new FormControl('');
+  filteredStates!: Observable<any[]>;
+
 
   panelOpenState: boolean = false;
     

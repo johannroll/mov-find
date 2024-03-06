@@ -34,8 +34,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 
         .image {
-            width: 100%;
-            max-width: 350px;
+            width: 100%; 
+            max-width: 300px;
             object-fit: cover;
             box-shadow: 0px 2px 10px 2px rgb(0, 0, 0, 0.4);
             border-radius: 2px;
@@ -78,7 +78,7 @@ import { MatIconModule } from '@angular/material/icon';
                     </div>
                 } @else {
             
-                        <img class="image" priority  [ngSrc]="actor().profile_path !== null ? 'https://image.tmdb.org/t/p/w500/' + actor().profile_path : 'https://fakeimg.pl/600x750?text=No+image'" width="300" height="450">
+                        <img class="image" priority  [ngSrc]="actor().profile_path !== null ? 'https://image.tmdb.org/t/p/w500/' + actor().profile_path : 'https://fakeimg.pl/600x750?text=No+image'" width="260" height="300">
                         <div class="actor-details">
                             <h2> {{ actor().name }}</h2>
                             @if (actor().place_of_birth) {
