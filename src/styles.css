@@ -65,8 +65,8 @@ a {
 
 .btn-back {
     position: fixed !important;
-    top: 75px;
-    left: 3px;
+    top: 78px;
+    left: 6px;
     align-self: flex-start;
     color: azure !important;
     z-index: 10;
@@ -98,3 +98,4 @@ a {
 .mdc-snackbar__label {
     color: rgb(41, 41, 41) !important;
 }
+

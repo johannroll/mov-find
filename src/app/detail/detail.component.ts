@@ -244,7 +244,7 @@ import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
         `
     ],
     template:`
-        <button mat-icon-button color="accent" class="btn-back" routerLink="/home">
+        <button mat-mini-fab color="accent" class="btn-back" routerLink="/home">
             <mat-icon>arrow_back</mat-icon>
         </button>
         <button mat-mini-fab color="warn" class="btn-favorite" (click)="snackbarService.displaySnackbarMessage('Added to watchlist')">
