@@ -10,7 +10,7 @@ export class SnackbarService {
 
     displaySnackbarMessage(message: string) {
         this.snackbar.open(message, 'Undo', { 
-            duration: 2500,
+            duration: 3000,
             panelClass: ['custom-snackbar', 'snackbar-success'], 
         });
     }

@@ -61,6 +61,8 @@ import { map, tap } from 'rxjs';
   styles: [`
 
     .toolbar {
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
       position: fixed;
       display: flex;
       align-items: center;
