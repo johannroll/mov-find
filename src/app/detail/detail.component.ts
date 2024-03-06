@@ -11,7 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
+
 
 
 @Component({
@@ -43,26 +47,6 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         
         .cast-text {
             padding-top: 1rem;
-        }
-
-        .btn-back {
-            position: fixed;
-            top: 90px;
-            width: 100px;
-            align-self: flex-start;
-            margin: 0rem 12px;
-            padding: 15px 5px;
-            border-radius: 5px;
-            border: none;
-            color: azure;
-            background: teal;
-            transition: all 0.2s ease;
-            box-shadow: 0 3px 4px 3px rgb(0, 0, 0, 0.3);
-            z-index: 10;
-        }
-
-        .btn-back:hover {
-            transform: scale(1.05);
         }
 
         .movie-details {
@@ -116,7 +100,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         }
 
         .actor-img {
-            border-radius: 5px;
+            border-radius: 2px;
             box-shadow: 0  3px 5px rgb(0,0,0,0.4);
             transition: all 0.2s ease;
             object-fit: cover;
@@ -187,6 +171,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
             margin-bottom: 2rem;
         }
 
+
         .slide {
             padding: 0px 2px;
         }
@@ -238,10 +223,17 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         @media (max-width: 472px) {
             .select-container {
                 flex-direction: column;
+
             }
 
             mat-form-field {
-                margin-right: 0px;
+                margin-right: 12px;
+            }
+
+            .slick-slider {
+                
+                width: 70%;
+                
             }
 
             
@@ -249,13 +241,18 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         `
     ],
     template:`
-        <button class="btn-back" routerLink="/home">Back</button>
+        <button mat-fab color="accent" class="btn-back" routerLink="/home">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-fab color="warn" class="btn-favorite" (click)="snackbarService.displaySnackbarMessage('Added to watchlist')">
+            <mat-icon>favorite</mat-icon>
+        </button>
         <div class="container">
             @if (movie(); as movie) {
                 <!-- <h1>{{ movie.title }}</h1> -->
                 <div class="movie-detail-container">
                     
-                    <img class="image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="450">
+                    <img class="image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500">
                     <div class="movie-details">
                         <p class="released"><span class="bold">Released </span>{{ movie.release_date.substring(0, 4) }} &nbsp;&nbsp;
                             <span class="genre">
@@ -277,7 +274,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
                             </div>
                         } @else {
                             <div class="select-container">
-                                <mat-form-field secondary appearance="outline">
+                                <mat-form-field color="accent" secondary appearance="outline">
                                     <mat-label>Select Country</mat-label>
                                     <mat-select (selectionChange)="country.set(countrySelected($event.value))" #selectRef>
                                         @if ((movieService.movieDetail()[2].results | json) === '{}') {
@@ -289,7 +286,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
                                     </mat-select>
                                 </mat-form-field>
                                 @if (country() !== null) {
-                                <mat-form-field class="type" appearance="outline">
+                                <mat-form-field color="accent" class="type" appearance="outline">
                                     <mat-label>Provider type</mat-label>
                                     <mat-select (selectionChange)="type.set(providerTypeSelected($event.value))">
                                         @if ((movieService.movieDetail()[2].results | json) === '{}') {
@@ -371,7 +368,9 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
         KeyValuePipe,
         MatFormFieldModule, 
         MatSelectModule, 
-        MatInputModule, 
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule, 
         FormsModule,
         SlickCarouselModule
     ],
@@ -380,6 +379,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 export default class DetailComponent {
     private route = inject(ActivatedRoute)
     movieService = inject(MoviesService)
+    snackbarService = inject(SnackbarService)
 
     params = toSignal(this.route.paramMap);
 
@@ -428,6 +428,7 @@ export default class DetailComponent {
         dots: false,
         arrows: true,
         draggable: true,
+        accessibility: false,
         responsive: [
             {
                 breakpoint: 800,
@@ -462,7 +463,7 @@ export default class DetailComponent {
                 }
             },
             {
-                breakpoint: 454,
+                breakpoint: 480,
                 settings: {
                 slidesToShow: 2,
                 dots: false,

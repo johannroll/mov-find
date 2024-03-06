@@ -4,6 +4,8 @@ import { ActivatedRoute, RouterLink } from "@angular/router";
 import { MoviesService } from "../Services/MoviesService/movies.service";
 import { JsonPipe } from "@angular/common";
 import { Location, NgOptimizedImage } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
@@ -16,25 +18,6 @@ import { Location, NgOptimizedImage } from '@angular/common';
             width: 100%;
             margin: 2rem 1rem 1rem;
             gap: 20px;
-        }
-
-        .btn-back {
-            position: fixed;
-            top: 90px;
-            width: 100px;
-            align-self: flex-start;
-            margin: 0rem 1rem;
-            padding: 15px 5px;
-            border-radius: 5px;
-            border: none;
-            color: azure;
-            background: teal;
-            box-shadow: 0px 3px 4px 3px rgb(0, 0, 0, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-back:hover {
-            transform: scale(1.05);
         }
 
         .loader-wrapper {
@@ -55,7 +38,7 @@ import { Location, NgOptimizedImage } from '@angular/common';
             max-width: 350px;
             object-fit: cover;
             box-shadow: 0px 2px 10px 2px rgb(0, 0, 0, 0.4);
-            border-radius: 5px;
+            border-radius: 2px;
         }
 
         .actor-details {
@@ -64,8 +47,8 @@ import { Location, NgOptimizedImage } from '@angular/common';
 
         .actor-description {
             font-weight: 300;
-            font-size: 0.9rem;
-            line-height: 1.2;
+            font-size: 0.95rem;
+            line-height: 1.3;
             letter-spacing: 1.1;
             color: rgb(215,215,215);
             padding: 0px 5px;
@@ -84,7 +67,9 @@ import { Location, NgOptimizedImage } from '@angular/common';
 
     `],
     template: `
-        <button class="btn-back" (click)="back().back()">Back</button>
+        <button mat-fab color="accent" class="btn-back" (click)="back().back()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
         <div class="container">
             <div class="actor-detail-container">
                 @if (movieService.loadingActor()) {
@@ -119,7 +104,13 @@ import { Location, NgOptimizedImage } from '@angular/common';
             </div>
         </div>
     `,
-    imports: [RouterLink, JsonPipe,  NgOptimizedImage]
+    imports: [
+        RouterLink,
+        JsonPipe,
+        NgOptimizedImage,
+        MatButtonModule,
+        MatIconModule, 
+    ]
 })
 
 export default class ActorComponent {

@@ -3,13 +3,14 @@ import { ActivatedRoute, NavigationEnd, RouterOutlet, Router, RouterLink } from 
 import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
+import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,RouterLink, MatButtonModule, MatMenuModule],
+  imports: [RouterOutlet,RouterLink, MatButtonModule, MatMenuModule,  MatIconModule],
   template: `
 
     <div class="toolbar">
@@ -33,6 +34,11 @@ import { map, tap } from 'rxjs';
                 <button routerLink="/home" (click)="movieService.genre$.next(genre)" mat-menu-item>{{ genre.name }}</button>
               }
             </mat-menu>
+          </li>
+          <li>
+              <button  routerLink="/watchlist" mat-icon-button>
+                <mat-icon>favorite</mat-icon>
+              </button>
           </li>
           @if (movieService.state().genre === null) {
             <li class="selection">
@@ -118,11 +124,11 @@ import { map, tap } from 'rxjs';
 
   @media (max-width: 500px) {
     .toolbar {
-      padding-left: 5px;
+      padding-left: 4px;
     }
 
     .nav-items li {
-      margin-right: 10px;
+      margin-right: 4px;
     }
     
     .selection h1 {
@@ -143,6 +149,7 @@ import { map, tap } from 'rxjs';
   `],
 })
 export class AppComponent {
-  movieService = inject(MoviesService)  
+  movieService = inject(MoviesService)
+    
 
 }

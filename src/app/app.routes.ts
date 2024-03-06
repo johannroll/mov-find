@@ -18,6 +18,11 @@ export const routes: Routes = [
         import('./actor/actor.component'),
     },
     {
+        path: 'watchlist',
+        loadComponent: () =>
+        import('./watchlist/watchlist.component'),
+    },
+    {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',

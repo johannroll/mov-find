@@ -133,7 +133,7 @@ export interface ScrollState {
                 {
                     <div class="card" routerLink="/detail/{{movie.id}}" (click)="movieService.scrollState.set({ scrollTo: scrollPosition() })">
                         @if($index < 4) {
-                            <img priority class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="450"  >
+                            <img priority class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500"  >
                         } @else {
                             <img class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="450" (click)="this.movieService.movieDetailId$.next(+movie.id)" >
                         }

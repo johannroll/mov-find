@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu'
 
 
 
+
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes, withViewTransitions()), importProvidersFrom(HttpClientModule, LazyLoadImageModule, MatButtonModule, MatMenuModule), provideAnimationsAsync()]
 };
