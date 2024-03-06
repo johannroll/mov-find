@@ -163,8 +163,6 @@ import { MatTabsModule } from '@angular/material/tabs'
   styles: [`
 
     .toolbar {
-      padding-top: env(safe-area-inset-top);
-      padding-left: env(safe-area-inset-left);
       position: fixed;
       display: flex;
       align-items: center;
