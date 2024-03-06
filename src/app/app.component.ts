@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, RouterOutlet, Router, RouterLink } from '@angular/router';
 import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
@@ -15,6 +15,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {AsyncPipe} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatTabsModule } from '@angular/material/tabs'
 
 
 @Component({
@@ -36,6 +38,8 @@ import {MatInputModule} from '@angular/material/input';
     ReactiveFormsModule,
     FormsModule,
     MatInputModule,
+    MatToolbarModule,
+    MatTabsModule,
 
   ],
   template: `
@@ -45,6 +49,11 @@ import {MatInputModule} from '@angular/material/input';
         <button class="menu-button" mat-icon-button (click)="drawer.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
+     
+        <button mat-icon-button (click)="openSearch()">
+          <mat-icon>search</mat-icon>
+        </button>
+     
         <ul class="nav-items hide">
             <li>
               <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop})">Home</a>
@@ -72,28 +81,6 @@ import {MatInputModule} from '@angular/material/input';
             </li>
           </ul>
           <ul class="nav-items category">
-            <li class="search-list-item">
-              <form  class="search-form">
-                <mat-form-field appearance="outline" subscriptsizing="dynamic" color="accent" class="example-full-width">
-                  <mat-label>
-                    Search
-                  </mat-label>
-                  <input matInput
-                        aria-label="State"
-                        [matAutocomplete]="auto"
-                        [formControl]="stateCtrl">
-                  <mat-autocomplete #auto="matAutocomplete">
-                    @for (state of filteredStates | async; track state) {
-                      <mat-option [value]="state.name">
-                        <img alt="" class="example-option-img" [src]="state.flag" height="25">
-                        <span>{{state.name}}</span> |
-                        <small>Population: {{state.population}}</small>
-                      </mat-option>
-                    }
-                  </mat-autocomplete>
-                </mat-form-field>
-              </form>
-            </li>
             @if (movieService.state().genre === null) {
               <li class="selection">
                  <h1>{{ movieService.selection() }}</h1>
@@ -106,6 +93,18 @@ import {MatInputModule} from '@angular/material/input';
           </ul>
       
     </div>
+
+    <!-- <mat-toolbar class="search-block mat-elevation-z4" [class.active]="toggleSearch">
+      <mat-toolbar-row style="padding: 0 5px;">
+        <button class="search-icon" mat-icon-button disabled>
+          <mat-icon>search</mat-icon>
+        </button>
+        <input class="search-control" type="text" placeholder="Search" [(ngModel)]="searchText" #searchbar>
+        <button mat-button mat-icon-button (click)="searchClose()">
+          <mat-icon>close</mat-icon>
+        </button> 
+      </mat-toolbar-row>
+    </mat-toolbar> -->
 
     
   
@@ -279,13 +278,19 @@ import {MatInputModule} from '@angular/material/input';
       display: none;
     }
 
+  @media (max-width: 615px) {
+    .selection h1 {
+      font-size: 1.5rem;
+    }
+  }
+
   @media (max-width: 575px) {
     .selection h1 {
       font-size: 1.125rem;
     }
   }
 
-  @media (max-width: 500px) {
+  @media (max-width: 545px) {
     .toolbar {
       padding-left: 5px;
     }
@@ -317,6 +322,7 @@ import {MatInputModule} from '@angular/material/input';
 export class AppComponent {
   movieService = inject(MoviesService)
   @ViewChild('sidenav') sidenav!: MatSidenav;
+  @ViewChild('searchbar') searchbar!: ElementRef;
 
   stateCtrl = new FormControl('');
   filteredStates!: Observable<any[]>;
@@ -326,6 +332,19 @@ export class AppComponent {
     
   close() {
     this.sidenav.close();
+  }
+
+  searchText = '';
+
+  toggleSearch: boolean = false;
+
+  openSearch() {
+    this.toggleSearch = true;
+    this.searchbar.nativeElement.focus();
+  }
+  searchClose() {
+    this.searchText = '';
+    this.toggleSearch = false;
   }
 
 }

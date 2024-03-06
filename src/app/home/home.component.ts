@@ -58,7 +58,7 @@ export interface ScrollState {
 
         }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 1050px) {
             .movie-list {
                 grid-template-columns: repeat(2, 1fr); 
             }
