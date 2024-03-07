@@ -17,6 +17,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTabsModule } from '@angular/material/tabs'
+import { StorageService } from './Services/StorageService/storage.service';
 
 
 @Component({
@@ -319,6 +320,7 @@ import { MatTabsModule } from '@angular/material/tabs'
 })
 export class AppComponent {
   movieService = inject(MoviesService)
+  storageService = inject(StorageService)
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('searchbar') searchbar!: ElementRef;
 

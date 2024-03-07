@@ -249,9 +249,17 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
             <mat-icon>arrow_back</mat-icon>
         </button>
         @if (movie(); as movie) {
-        <button mat-mini-fab color="warn" class="btn-favorite" (click)="snackbarService.displaySnackbarMessage('Added ' + movie.title + ' to your Watchlist', movie.id); watchlistService.add$.next(movie)">
-            <mat-icon>favorite</mat-icon>
-        </button>
+            @for (watchlistMovie of watchlistService.watchlistItems(); track watchlistMovie.id) {
+                @if (watchlistMovie.id === movie.id) {
+                    <button mat-mini-fab color="warn" class="btn-favorite" (click)="watchlistService.remove$.next(movie.id)">
+                        <mat-icon>favorite</mat-icon>
+                    </button>
+                } @else {
+                    <button mat-mini-fab color="none" class="btn-favorite" (click)="watchlistService.add$.next(movie)">
+                        <mat-icon>favorite</mat-icon>
+                    </button>
+                }
+            }
         <div class="container">
                 <!-- <h1>{{ movie.title }}</h1> -->
                 <div class="movie-detail-container">

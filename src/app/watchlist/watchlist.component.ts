@@ -15,10 +15,14 @@ import { MatButtonModule } from "@angular/material/button";
             <mat-icon>arrow_back</mat-icon>
         </button>
         <div class="container">
-            <app-watchlist-list 
-                [watchlistItems]="items()"
-                (delete)="watchlistService.remove$.next($event)"
-            ></app-watchlist-list>
+            @if (watchlistService.loaded()) {
+                <app-watchlist-list 
+                    [watchlistItems]="items()"
+                    (delete)="watchlistService.remove$.next($event)"
+                ></app-watchlist-list>
+            } @else {
+                <div class="loader"></div>
+            }
         </div>
     `,
     styles: [``]
