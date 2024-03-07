@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
+import { WatchlistService } from "../watchlist/data-access/watchlist.service";
 
 
 
@@ -247,11 +248,11 @@ import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
         <button mat-mini-fab color="accent" class="btn-back" routerLink="/home">
             <mat-icon>arrow_back</mat-icon>
         </button>
-        <button mat-mini-fab color="warn" class="btn-favorite" (click)="snackbarService.displaySnackbarMessage('Added to watchlist')">
+        @if (movie(); as movie) {
+        <button mat-mini-fab color="warn" class="btn-favorite" (click)="snackbarService.displaySnackbarMessage('Added ' + movie.title + ' to your Watchlist', movie.id); watchlistService.add$.next(movie)">
             <mat-icon>favorite</mat-icon>
         </button>
         <div class="container">
-            @if (movie(); as movie) {
                 <!-- <h1>{{ movie.title }}</h1> -->
                 <div class="movie-detail-container">
                     
@@ -359,8 +360,8 @@ import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
                     }
                 }
                 </div>
-            }
-        </div>
+            </div>
+        }
         `,
     imports: [
         RouterLink, 
@@ -383,6 +384,7 @@ export default class DetailComponent {
     private route = inject(ActivatedRoute)
     movieService = inject(MoviesService)
     snackbarService = inject(SnackbarService)
+    watchlistService = inject(WatchlistService)
 
     params = toSignal(this.route.paramMap);
 

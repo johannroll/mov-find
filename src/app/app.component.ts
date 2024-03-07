@@ -171,9 +171,9 @@ import { MatTabsModule } from '@angular/material/tabs'
       z-index: 1000;
       top: 0px;
       height: 60px;
-      box-shadow: 0 2px 6px 2px rgb(0,0,0,0.2);
-      background: rgb(58,58,58, 0.89);
-      backdrop-filter: blur(10px); 
+      box-shadow: 0px 10px 40px 5px rgb(240,240,240,0.2);
+      background: rgb(58,58,58, 0.8);
+      backdrop-filter: blur(12px); 
     }
 
     #drawer {
