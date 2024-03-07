@@ -6,7 +6,7 @@ import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { YouTubePlayer } from "@angular/youtube-player";
 import { SafePipe } from "../shared/utils/safe.pipe";
-import { KeyValuePipe } from "@angular/common";
+import { KeyValuePipe, Location } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -245,7 +245,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
         `
     ],
     template:`
-        <button mat-mini-fab color="accent" class="btn-back" routerLink="/home">
+        <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
         </button>
         @if (movie(); as movie) {
@@ -380,13 +380,15 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
     ],
 })
 
-export default class DetailComponent {
+export default class DetailComponent implements OnInit {
     private route = inject(ActivatedRoute)
+    private location = inject(Location)
     movieService = inject(MoviesService)
     snackbarService = inject(SnackbarService)
     watchlistService = inject(WatchlistService)
 
     params = toSignal(this.route.paramMap);
+    back = signal(this.location);
 
     // moviedetail = computed(() =>  this.movieService.movieDetailId$.next(Number(this.params()?.get('id'))));
     
@@ -398,6 +400,12 @@ export default class DetailComponent {
 
    country = signal<any>(null);
    type = signal<any>(null);
+
+   ngOnInit() {
+    if (this.params()?.get('id') !== null) {
+        this.movieService.movieDetailId$.next(Number(this.params()?.get('id')))
+    }
+   }
 
    ngAfterViewInit() {
        window.scrollTo(0, 0);

@@ -3,20 +3,20 @@ import { Movie, RemoveMovie } from "../../shared/interfaces/movie";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { NgOptimizedImage } from "@angular/common";
+import { RouterLink } from "@angular/router";
 
 @Component({
     standalone: true,
     selector: 'app-watchlist-list',
-    imports: [MatIconModule, MatButtonModule,  NgOptimizedImage],
+    imports: [MatIconModule, MatButtonModule,  NgOptimizedImage,RouterLink],
     template: `
         <section>
             <ul class="watchlist">
                 @for (item of watchlistItems; track item.id){
                 <li >
-                    <div class="watchlist-item-container">
-                        <div class="watchlist-item">
-                            <img class="watchlist-item-image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ item.poster_path }}" width="500" height="750">
-                        
+                    <div class="watchlist-item-container">   
+                        <div class="watchlist-item" routerLink="/detail/{{item.id}}">
+                            <img class="watchlist-item-image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ item.poster_path }}" width="500" height="750">                    
                             <div class="watchlist-item-details">
                                 <p>{{ item.title }}</p>
                             </div>

@@ -1,7 +1,7 @@
 import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { StorageService } from "../../Services/StorageService/storage.service";
 import { Movie, RemoveMovie } from "../../shared/interfaces/movie";
-import { Subject } from "rxjs";
+import { Subject, map } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 
@@ -32,7 +32,10 @@ export class WatchlistService {
     remove$ = new Subject<RemoveMovie>();
 
     constructor() {
-        this.add$.pipe(takeUntilDestroyed()).subscribe((movie) =>
+        this.add$.pipe(
+            takeUntilDestroyed(),
+          
+            ).subscribe((movie) =>
             this.state.update((state) => ({
                 ...state,
                     watchlistItems: [
