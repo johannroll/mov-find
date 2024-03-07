@@ -259,6 +259,10 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                         <mat-icon>favorite</mat-icon>
                     </button>
                 }
+            } @empty {
+                <button mat-mini-fab color="none" class="btn-favorite" (click)="watchlistService.add$.next(movie)">
+                    <mat-icon>favorite</mat-icon>
+                </button>
             }
         <div class="container">
                 <!-- <h1>{{ movie.title }}</h1> -->
