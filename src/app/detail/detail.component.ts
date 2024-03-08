@@ -254,11 +254,11 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
             </div>
         } @else {
             @if (watchlistService.isMovieOnWatchlist(movieService.movieDetail()[0].id)) {
-                <button mat-mini-fab color="warn" class="btn-favorite" (click)="watchlistService.remove$.next(movieService.movieDetail()[0].id)">
+                <button mat-fab color="warn" class="btn-favorite" (click)="watchlistService.remove$.next(movieService.movieDetail()[0].id)">
                     <mat-icon>favorite</mat-icon>
                 </button>
             } @else {
-                <button mat-mini-fab color="none" class="btn-favorite" (click)="watchlistService.add$.next(movieService.movieDetail()[0])">
+                <button mat-fab color="none" class="btn-favorite" (click)="watchlistService.add$.next(movieService.movieDetail()[0])">
                     <mat-icon>favorite</mat-icon>
                 </button>
             }
@@ -272,14 +272,14 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                         <p class="released">
                             @if (movieService.movieDetail()[0].status === "Released") {
                                 <span class="bold">Released</span>&nbsp;&nbsp;
-                                {{ movieService.movieDetail()[0].release_date.substring(0, 4) }} &nbsp;&nbsp;
+                                {{ movieService.movieDetail()[0].release_date.substring(0, 4) }} &nbsp;
                             } @else {
                                 <span class="bold">{{ movieService.movieDetail()[0].status }}</span>&nbsp;&nbsp;
-                                {{ movieService.movieDetail()[0].release_date }} &nbsp;&nbsp;
+                                {{ movieService.movieDetail()[0].release_date }} &nbsp;
                             } 
                             <span class="genre">
-                                @for (genre of movieGenres(); track $index) {
-                                    @if ($index === movieGenres().length -1) {
+                                @for (genre of movie().genres; track $index) {
+                                    @if ($index === movie().genres.length -1) {
                                         {{ genre.name.trim() }}
                                     } @else {
                                         {{ genre.name.trim() }} /
@@ -407,11 +407,9 @@ export default class DetailComponent {
 
     // moviedetail = computed(() =>  this.movieService.movieDetailId$.next(Number(this.params()?.get('id'))));
     
-    movie = computed(() => this.movieService.movies()
-        .find((movie) => movie.id == this.params()?.get('id'))
-    );
+    movie = computed(() => this.movieService.movieDetail()[0]);
 
-    movieGenres = computed(() => this.movieService.getMovieGenres(this.movie()?.genre_ids))
+    // movieGenres = computed(() => this.movieService.getMovieGenres(this.movie()?.genre_ids))
 
    country = signal<any>(null);
    type = signal<any>(null);
