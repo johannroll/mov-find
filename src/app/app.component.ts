@@ -173,8 +173,9 @@ import { StorageService } from './Services/StorageService/storage.service';
       top: 0px;
       height: 60px;
       box-shadow: 0px 3px 20px 3px rgb(230,230,230,0.2);
-      background: rgb(58,58,58, 0.8);
-      backdrop-filter: blur(12px); 
+      background: rgb(58,58,58);
+      /* background: rgb(58,58,58, 0.8);
+       backdrop-filter: blur(12px); */
     }
 
     #drawer {

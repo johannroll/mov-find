@@ -269,7 +269,14 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                     
                     <img class="image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ movieService.movieDetail()[0].poster_path }}" width="300" height="500">
                     <div class="movie-details">
-                        <p class="released"><span class="bold">Released </span>{{ movieService.movieDetail()[0].release_date.substring(0, 4) }} &nbsp;&nbsp;
+                        <p class="released">
+                            @if (movieService.movieDetail()[0].status === "Released") {
+                                <span class="bold">Released</span>&nbsp;&nbsp;
+                                {{ movieService.movieDetail()[0].release_date.substring(0, 4) }} &nbsp;&nbsp;
+                            } @else {
+                                <span class="bold">{{ movieService.movieDetail()[0].status }}</span>&nbsp;&nbsp;
+                                {{ movieService.movieDetail()[0].release_date }} &nbsp;&nbsp;
+                            } 
                             <span class="genre">
                                 @for (genre of movieGenres(); track $index) {
                                     @if ($index === movieGenres().length -1) {
@@ -278,6 +285,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                                         {{ genre.name.trim() }} /
                                     }
                                 }
+                                &nbsp;({{ movieService.movieDetail()[0].runtime }} minutes)
                             </span>
                         </p>
                         <p class="rating"><span class="bold">Rating</span> {{ +movieService.movieDetail()[0].vote_average / 10 * 100 | number:'2.2-2'  }} <span class="genre">({{ movieService.movieDetail()[0].vote_count }})</span></p>

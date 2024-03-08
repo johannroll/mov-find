@@ -11,6 +11,7 @@ import { Subject } from "rxjs";
 import { MatIconModule } from "@angular/material/icon";
 import { WatchlistService } from "../watchlist/data-access/watchlist.service";
 import { MatButtonModule } from "@angular/material/button";
+import { stopPropagation } from "../shared/utils/stop-propagation.directive";
 
 export interface ScrollState {
     scroll: number
@@ -153,11 +154,11 @@ export interface ScrollState {
                             <img class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500" (click)="this.movieService.movieDetailId$.next(+movie.id)" >
                         }
                         @if (watchlistService.isMovieOnWatchlist(movie.id)) {
-                            <button mat-mini-fab color="warn" class="btn-favorite-home" (click)="watchlistService.remove$.next(movieService.movieDetail()[0].id)">
+                            <button mat-mini-fab color="warn" class="btn-favorite-home" stopPropagation (click)="watchlistService.remove$.next(movie.id)">
                                 <mat-icon>favorite</mat-icon>
                             </button>
                         } @else {
-                            <button mat-mini-fab color="none" class="btn-favorite-home" (click)="watchlistService.add$.next(movieService.movieDetail()[0])">
+                            <button mat-mini-fab color="none" class="btn-favorite-home" stopPropagation (click)="watchlistService.add$.next(movie)">
                                 <mat-icon>favorite</mat-icon>
                             </button>
                         }
@@ -189,7 +190,7 @@ export interface ScrollState {
             </div> -->
         </div>
         `,
-    imports: [RouterLink, ReactiveFormsModule, JsonPipe, NgOptimizedImage, InfiniteScrollModule, MatIconModule, MatButtonModule],
+    imports: [RouterLink, ReactiveFormsModule, JsonPipe, NgOptimizedImage, InfiniteScrollModule, MatIconModule, MatButtonModule, stopPropagation],
 
 })
 
