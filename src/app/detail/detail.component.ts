@@ -79,7 +79,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
             width: 100%;
             max-width: 350px;
             object-fit: cover;
-            box-shadow: 0px 2px 10px 2px rgb(0, 0, 0, 0.4);
+            box-shadow: 0px 3px 15px 3px rgb(0, 0, 0, 0.4);
         }
 
         .provider {
@@ -248,29 +248,28 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
         <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
         </button>
-        @if (movie(); as movie) {
-            @for (watchlistMovie of watchlistService.watchlistItems(); track watchlistMovie.id) {
-                @if (watchlistMovie.id === movie.id) {
-                    <button mat-mini-fab color="warn" class="btn-favorite" (click)="watchlistService.remove$.next(movie.id)">
-                        <mat-icon>favorite</mat-icon>
-                    </button>
-                } @else {
-                    <button mat-mini-fab color="none" class="btn-favorite" (click)="watchlistService.add$.next(movie)">
-                        <mat-icon>favorite</mat-icon>
-                    </button>
-                }
-            } @empty {
-                <button mat-mini-fab color="none" class="btn-favorite" (click)="watchlistService.add$.next(movie)">
+        @if (movieService.movieDetailState().loading) {
+            <div class="loader-wrapper">
+                <div class="loader"></div>
+            </div>
+        } @else {
+            @if (watchlistService.isMovieOnWatchlist(movieService.movieDetail()[0].id)) {
+                <button mat-mini-fab color="warn" class="btn-favorite" (click)="watchlistService.remove$.next(movieService.movieDetail()[0].id)">
+                    <mat-icon>favorite</mat-icon>
+                </button>
+            } @else {
+                <button mat-mini-fab color="none" class="btn-favorite" (click)="watchlistService.add$.next(movieService.movieDetail()[0])">
                     <mat-icon>favorite</mat-icon>
                 </button>
             }
+             
         <div class="container">
                 <!-- <h1>{{ movie.title }}</h1> -->
                 <div class="movie-detail-container">
                     
-                    <img class="image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500">
+                    <img class="image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ movieService.movieDetail()[0].poster_path }}" width="300" height="500">
                     <div class="movie-details">
-                        <p class="released"><span class="bold">Released </span>{{ movie.release_date.substring(0, 4) }} &nbsp;&nbsp;
+                        <p class="released"><span class="bold">Released </span>{{ movieService.movieDetail()[0].release_date.substring(0, 4) }} &nbsp;&nbsp;
                             <span class="genre">
                                 @for (genre of movieGenres(); track $index) {
                                     @if ($index === movieGenres().length -1) {
@@ -281,22 +280,18 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                                 }
                             </span>
                         </p>
-                        <p class="rating"><span class="bold">Rating</span> {{ +movie.vote_average / 10 * 100 | number:'2.2-2'  }} <span class="genre">({{ movie.vote_count }})</span></p>
-                        <p class="language"><span class="bold">Language </span> {{ getLanguageName(movie.original_language) }}</p>
-                        <p class="movie-description">{{ movie.overview }}</p>
-                        @if (movieService.movieDetailState().loading) {
-                            <div class="loader-wrapper">
-                                <div class="loader"></div>
-                            </div>
-                        } @else {
+                        <p class="rating"><span class="bold">Rating</span> {{ +movieService.movieDetail()[0].vote_average / 10 * 100 | number:'2.2-2'  }} <span class="genre">({{ movieService.movieDetail()[0].vote_count }})</span></p>
+                        <p class="language"><span class="bold">Language </span> {{ getLanguageName(movieService.movieDetail()[0].original_language) }}</p>
+                        <p class="movie-description">{{ movieService.movieDetail()[0].overview }}</p>
+                       
                             <div class="select-container">
                                 <mat-form-field color="accent" secondary appearance="outline">
                                     <mat-label>Select Country</mat-label>
                                     <mat-select (selectionChange)="country.set(countrySelected($event.value))" #selectRef>
-                                        @if ((movieService.movieDetail()[2].results | json) === '{}') {
+                                        @if ((movieService.movieDetail()[3].results | json) === '{}') {
                                             <mat-option>None</mat-option>
                                         }
-                                        @for (country of movieService.movieDetail()[2].results | keyvalue; track country.key) {
+                                        @for (country of movieService.movieDetail()[3].results | keyvalue; track country.key) {
                                         <mat-option [value]="country.key">{{ getCountryName(country.key) }}</mat-option>
                                         }
                                     </mat-select>
@@ -305,10 +300,10 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                                 <mat-form-field color="accent" class="type" appearance="outline">
                                     <mat-label>Provider type</mat-label>
                                     <mat-select (selectionChange)="type.set(providerTypeSelected($event.value))">
-                                        @if ((movieService.movieDetail()[2].results | json) === '{}') {
+                                        @if ((movieService.movieDetail()[3].results | json) === '{}') {
                                             <mat-option>None</mat-option>
                                         }
-                                        @for (countryProviderType of movieService.movieDetail()[2].results[country()] | keyvalue; track countryProviderType.key) {
+                                        @for (countryProviderType of movieService.movieDetail()[3].results[country()] | keyvalue; track countryProviderType.key) {
                                             @if (countryProviderType.key !== 'link') {
                                                 <mat-option [value]="countryProviderType.key">{{ countryProviderType.key }}</mat-option>
                                             }
@@ -317,16 +312,16 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                                 </mat-form-field>
                                 }
                             </div>
-                            @if (movieService.movieDetail()[2].results.length != {} && movieService.movieDetail()[2].results != undefined && country() !== null && type() !== null) {
+                            @if (movieService.movieDetail()[3].results.length != {} && movieService.movieDetail()[3].results != undefined && country() !== null && type() !== null) {
                         
                                 <span class="provider-container">
-                                    @for (provider of movieService.movieDetail()[2].results[country()][type()]; track $index) {
+                                    @for (provider of movieService.movieDetail()[3].results[country()][type()]; track $index) {
                                         <img class="provider" ngSrc="https://image.tmdb.org/t/p/original{{provider.logo_path}}" width="50" height="50" />
                                     }
                                 </span>
 
                             } 
-                        }
+                        
                     </div>
                     
                 </div>
@@ -339,7 +334,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                         (breakpoint)="breakpoint($event)"
                         (afterChange)="afterChange($event)"
                         (beforeChange)="beforeChange($event)">
-                        @for (actor of movieService.movieDetail()[0]?.cast; track actor.id) {
+                        @for (actor of movieService.movieDetail()[1]?.cast; track actor.id) {
                             @if (actor.order < 10) {
                                 <div ngxSlickItem class="slide">
                                     <a routerLink="/actor/{{actor.id}}">
@@ -353,15 +348,15 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                 </div>
                 <div class="video-container">
                 @if (!movieService.movieDetailState().loading) {  
-                    @if(movieService.movieDetail()[1].results.length > 0) {
-                        @if (movieService.movieDetail()[1].results.length > 2) {
-                            <youtube-player id="video-player" [videoId]="movieService.movieDetail()[1]?.results[movieService.movieDetail()[1]?.results.length - 2]?.key"
+                    @if(movieService.movieDetail()[2].results.length > 0) {
+                        @if (movieService.movieDetail()[2].results.length > 2) {
+                            <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[movieService.movieDetail()[2]?.results.length - 2]?.key"
                                 width="500"
                                 height="250"
                                 suggestedQuality="hd1080"> 
                             </youtube-player>
-                        } @else if (movieService.movieDetail()[1].results.length <= 2) {
-                            <youtube-player id="video-player" [videoId]="movieService.movieDetail()[1]?.results[0]?.key"
+                        } @else if (movieService.movieDetail()[2].results.length <= 2) {
+                            <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[0]?.key"
                                 width="500"
                                 height="250"
                                 suggestedQuality="hd1080"> 
@@ -392,7 +387,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
     ],
 })
 
-export default class DetailComponent implements OnInit {
+export default class DetailComponent {
     private route = inject(ActivatedRoute)
     private location = inject(Location)
     movieService = inject(MoviesService)
@@ -413,11 +408,6 @@ export default class DetailComponent implements OnInit {
    country = signal<any>(null);
    type = signal<any>(null);
 
-   ngOnInit() {
-    if (this.params()?.get('id') !== null) {
-        this.movieService.movieDetailId$.next(Number(this.params()?.get('id')))
-    }
-   }
 
    ngAfterViewInit() {
        window.scrollTo(0, 0);

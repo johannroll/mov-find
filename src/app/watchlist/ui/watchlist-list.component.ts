@@ -78,7 +78,7 @@ import { RouterLink } from "@angular/router";
         }
         
         .watchlist-item-image {
-            height: 60px;
+            height: 75px;
             width: 450px;
             object-fit: cover;
             border-top-left-radius: 10px;
@@ -151,6 +151,10 @@ import { RouterLink } from "@angular/router";
 
             .remove-btn {
                 margin-left: 7px;
+            }
+
+            .watchlist-item-image {
+                height: 90px;
             }
         }
     `]

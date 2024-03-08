@@ -70,4 +70,8 @@ export class WatchlistService {
         });
 
     }
+
+    isMovieOnWatchlist(movieId: string) {
+        return this.watchlistItems().some((movie) => movie.id === movieId); 
+    }
 }

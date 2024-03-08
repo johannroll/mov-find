@@ -25,7 +25,7 @@ export interface ScrollState {
             flex-direction: column;
             align-items: center;
             background: rgb(58,58,58);
-            box-shadow: 0px 2px 10px 2px rgb(0, 0, 0, 0.4);
+            box-shadow: 0px 3px 15px 3px rgb(0, 0, 0, 0.4);
             transition: all 0.2s ease;
         }
 
@@ -133,7 +133,7 @@ export interface ScrollState {
                 @for (movie of movieService.movies(); track $index)
                 {
                     <div class="card" routerLink="/detail/{{movie.id}}" (click)="movieService.scrollState.set({ scrollTo: scrollPosition() })">
-                        @if($index < 4) {
+                        @if($index < 2) {
                             <img priority class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500"  >
                         } @else {
                             <img class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500" (click)="this.movieService.movieDetailId$.next(+movie.id)" >

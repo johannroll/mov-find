@@ -170,6 +170,7 @@ private options = {
     }))),
     switchMap((movieId) => {
       return forkJoin([
+          this.fetchMovie(movieId),
           this.fetchMovieCast(movieId),
           this.fetchMovieTrailer(movieId),
           this.fetchMovieWatchProviders(movieId)
@@ -298,6 +299,18 @@ private options = {
           }       
         )
       ) 
+  }
+
+  private fetchMovie(movieId: number | undefined | null) {
+    return this.http
+      .get(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`, this.options)
+      .pipe(
+        catchError((err) => EMPTY),
+        map(( response ) => {
+              return response
+          }
+        )
+      )
   }
 
   private fetchMovieCast(movieId: number | undefined | null) {

@@ -37,7 +37,7 @@ import { MatIconModule } from '@angular/material/icon';
             width: 100%; 
             max-width: 320px;
             object-fit: cover;
-            box-shadow: 0px 2px 10px 2px rgb(0, 0, 0, 0.4);
+            box-shadow: 0px 3px 15px 3px rgb(0, 0, 0, 0.4);
             border-radius: 2px;
         }
 
