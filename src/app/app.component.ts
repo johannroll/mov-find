@@ -172,7 +172,7 @@ import { StorageService } from './Services/StorageService/storage.service';
       z-index: 1000;
       top: 0px;
       height: 60px;
-      box-shadow: 0px 3px 25px 3px rgb(230,230,230,0.2);
+      box-shadow: 0px 3px 20px 3px rgb(230,230,230,0.2);
       background: rgb(58,58,58, 0.8);
       backdrop-filter: blur(12px); 
     }

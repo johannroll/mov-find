@@ -8,6 +8,9 @@ import { toSignal } from "@angular/core/rxjs-interop"
 import { map, tap } from "rxjs/operators";
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { Subject } from "rxjs";
+import { MatIconModule } from "@angular/material/icon";
+import { WatchlistService } from "../watchlist/data-access/watchlist.service";
+import { MatButtonModule } from "@angular/material/button";
 
 export interface ScrollState {
     scroll: number
@@ -19,6 +22,7 @@ export interface ScrollState {
     styles: [`
 
         .card {
+            position: relative;
             width: 320px;
             display: flex;
             margin: 1rem 1rem;
@@ -124,6 +128,16 @@ export interface ScrollState {
             transform: scale(1.05);
         }
 
+        .btn-favorite-home {
+            position: absolute !important;
+            bottom: 5px;
+            right: 0px;
+            align-self: center;
+            margin: 0rem 5px;
+            border: none;
+            z-index: 10;
+        }
+
         `
     ],
     template:`
@@ -134,9 +148,18 @@ export interface ScrollState {
                 {
                     <div class="card" routerLink="/detail/{{movie.id}}" (click)="movieService.scrollState.set({ scrollTo: scrollPosition() })">
                         @if($index < 2) {
-                            <img priority class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500"  >
+                            <img priority class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500">
                         } @else {
                             <img class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500" (click)="this.movieService.movieDetailId$.next(+movie.id)" >
+                        }
+                        @if (watchlistService.isMovieOnWatchlist(movie.id)) {
+                            <button mat-mini-fab color="warn" class="btn-favorite-home" (click)="watchlistService.remove$.next(movieService.movieDetail()[0].id)">
+                                <mat-icon>favorite</mat-icon>
+                            </button>
+                        } @else {
+                            <button mat-mini-fab color="none" class="btn-favorite-home" (click)="watchlistService.add$.next(movieService.movieDetail()[0])">
+                                <mat-icon>favorite</mat-icon>
+                            </button>
                         }
                     </div>     
                 }
@@ -166,12 +189,13 @@ export interface ScrollState {
             </div> -->
         </div>
         `,
-    imports: [RouterLink, ReactiveFormsModule, JsonPipe, NgOptimizedImage, InfiniteScrollModule],
+    imports: [RouterLink, ReactiveFormsModule, JsonPipe, NgOptimizedImage, InfiniteScrollModule, MatIconModule, MatButtonModule],
 
 })
 
 export default class HomeComponent {
     public movieService = inject(MoviesService);
+    public watchlistService = inject(WatchlistService)
     
     ngAfterViewInit() {
         window.scrollTo(0, this.movieService.scroll());  
