@@ -1,4 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --mat-sidenav-scrim-color: rgba(0, 0, 0, 0.00001); // Example: semi-transparent black
+}
+
 
 html, body { height: 100%; }
 body {
@@ -102,7 +106,7 @@ a {
 
 .search {
   --easing: cubic-bezier(0.4, 0, 0.2, 1);
-  --font-size: 1rem;
+  --font-size: 0.9rem;
   --color: var(--color-foreground);
   --color-highlight: azure;
   --transition-time-icon: 0.2s;
@@ -173,6 +177,7 @@ a {
   }
 
   &__label {
+   
     transition: transform var(--transition-time-icon) var(--easing), color 0.1s;
   }
 
@@ -205,7 +210,7 @@ a {
       }
 
       &__label {
-        transform: scale(0.5);
+        transform: scale(1);
       }
 
       &__submit {
@@ -227,4 +232,5 @@ a {
     opacity: 1;
   }
 }
+
 

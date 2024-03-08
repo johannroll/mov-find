@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, RouterOutlet, Router, RouterLink } from '@angular/router';
 import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
@@ -171,7 +171,7 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
     }
 
     .searchbar-wrapper {
-      width: 100%;
+      
       margin-right: auto;
     }
 
@@ -194,8 +194,9 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
       align-items: flex-start;
     }
 
+
     .nav-items {
-      width: 100%;
+     
       display: flex;
       align-items: center;
       padding: 5px 0px 5px 0px;
@@ -239,7 +240,7 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
     }
 
     .selection {
-      padding-right: 10px;
+      padding-right: 15px;
       margin-inline: auto;
     }
 
@@ -275,15 +276,29 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
       display: none;
     }
 
-  @media (max-width: 615px) {
+  @media (max-width: 765px) {
     .selection h1 {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
   }
 
-  @media (max-width: 575px) {
+  @media (max-width: 615px) {
+    .selection h1 {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 712px) {
     .selection h1 {
       font-size: 1.125rem;
+    }
+
+    .menu-button {
+      display: block;
+    }
+
+    .hide {
+      display: none;
     }
   }
 
@@ -305,13 +320,6 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
       padding-top: 80px;
     }
 
-    .menu-button {
-      display: block;
-    }
-
-    .hide {
-      display: none;
-    }
   }
   
   `],
@@ -321,6 +329,7 @@ export class AppComponent {
   storageService = inject(StorageService)
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('searchbar') searchbar!: ElementRef;
+
 
   stateCtrl = new FormControl('');
   filteredStates!: Observable<any[]>;
