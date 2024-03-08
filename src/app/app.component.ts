@@ -174,6 +174,8 @@ import { StorageService } from './Services/StorageService/storage.service';
       height: 60px;
       box-shadow: 0px 3px 20px 3px rgb(230,230,230,0.2);
       background: rgb(58,58,58);
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
       /* background: rgb(58,58,58, 0.8);
        backdrop-filter: blur(12px); */
     }
