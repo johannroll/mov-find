@@ -18,6 +18,7 @@ import {MatInputModule} from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTabsModule } from '@angular/material/tabs'
 import { StorageService } from './Services/StorageService/storage.service';
+import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
 
 
 @Component({
@@ -41,6 +42,7 @@ import { StorageService } from './Services/StorageService/storage.service';
     MatInputModule,
     MatToolbarModule,
     MatTabsModule,
+    SearchbarComponent
 
   ],
   template: `
@@ -51,9 +53,10 @@ import { StorageService } from './Services/StorageService/storage.service';
           <mat-icon>menu</mat-icon>
         </button>
      
-        <button mat-icon-button (click)="openSearch()">
+       
+        <!-- <button mat-icon-button (click)="openSearch()">
           <mat-icon>search</mat-icon>
-        </button>
+        </button> -->
      
         <ul class="nav-items hide">
             <li>
@@ -81,6 +84,9 @@ import { StorageService } from './Services/StorageService/storage.service';
                 </button>
             </li>
           </ul>
+          <div class="searchbar-wrapper">
+            <app-searchbar></app-searchbar>
+          </div>
           <ul class="nav-items category">
             @if (movieService.state().genre === null) {
               <li class="selection">
@@ -94,20 +100,6 @@ import { StorageService } from './Services/StorageService/storage.service';
           </ul>
       
     </div>
-
-    <!-- <mat-toolbar class="search-block mat-elevation-z4" [class.active]="toggleSearch">
-      <mat-toolbar-row style="padding: 0 5px;">
-        <button class="search-icon" mat-icon-button disabled>
-          <mat-icon>search</mat-icon>
-        </button>
-        <input class="search-control" type="text" placeholder="Search" [(ngModel)]="searchText" #searchbar>
-        <button mat-button mat-icon-button (click)="searchClose()">
-          <mat-icon>close</mat-icon>
-        </button> 
-      </mat-toolbar-row>
-    </mat-toolbar> -->
-
-    
   
     <mat-drawer-container hasBackdrop="true"  (backdropClick)="close()">
       <mat-drawer id="drawer" #drawer mode="push">
@@ -174,16 +166,19 @@ import { StorageService } from './Services/StorageService/storage.service';
       height: 60px;
       box-shadow: 0px 3px 20px 3px rgb(230,230,230,0.2);
       background: rgb(58,58,58);
-      padding-top: env(safe-area-inset-top);
-      padding-left: env(safe-area-inset-left);
       /* background: rgb(58,58,58, 0.8);
        backdrop-filter: blur(12px); */
+    }
+
+    .searchbar-wrapper {
+      width: 100%;
+      margin-right: auto;
     }
 
     #drawer {
       position: fixed;
       width: 215px;
-      margin-top: 68px;
+      margin-top: 66px;
       padding-top: 1rem;
       
     }
@@ -203,7 +198,7 @@ import { StorageService } from './Services/StorageService/storage.service';
       width: 100%;
       display: flex;
       align-items: center;
-      padding: 5px 10px 5px 0px;
+      padding: 5px 0px 5px 0px;
     }
 
     .search-list-item {

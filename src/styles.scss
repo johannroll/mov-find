@@ -1,0 +1,230 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    /* font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+    background-color: rgb(48, 48, 48);
+    margin: 0;
+    color:azure;
+    overflow: auto;
+   
+}
+
+
+p {
+    word-break: normal;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loader-container {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    background: rgb(48, 48, 48, 0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50% , -50%);
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    margin-bottom: 1rem;
+    aspect-ratio: 1;
+    --_c:no-repeat radial-gradient(farthest-side,#25b09b 92%,#0000);
+    background: 
+      var(--_c) top,
+      var(--_c) left,
+      var(--_c) right,
+      var(--_c) bottom;
+    background-size: 12px 12px;
+    animation: l7 1s infinite;
+  }
+  @keyframes l7 {to{transform: rotate(.5turn)}}
+
+.btn-back {
+    position: fixed !important;
+    top: 78px;
+    left: 6px;
+    align-self: flex-start;
+    color: azure !important;
+    z-index: 10;
+}
+
+.btn-favorite {
+    position: fixed !important;
+    bottom: 20px;
+    right: 0px;
+    align-self: center;
+    margin: 0rem 8px;
+    border: none;
+    z-index: 10;
+}
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  /* border-radius: 4px !important; */
+  width: 300px !important;
+}
+
+/* .mat-mdc-button.mat-mdc-snack-bar-action {
+  color: white !important;
+} */
+
+.mdc-snackbar__surface {
+    background-color: #8e9aa0 !important;
+}
+
+.mdc-snackbar__label {
+    color: rgb(41, 41, 41) !important;
+}
+
+
+.search {
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --font-size: 1rem;
+  --color: var(--color-foreground);
+  --color-highlight: azure;
+  --transition-time-icon: 0.2s;
+  --transition-time-input: 0.3s 0.25s;
+
+  svg {
+    transform: scale(0.5);
+   
+  }
+
+  &:not(:focus-within) {
+    --transition-time-input: 0.2s 0s;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+  --transition-time-icon: 0s !important;
+  --transition-time-input: 0s !important;
+  }
+
+  $root: &;
+
+  border-radius: 999px;
+  border: 2px solid transparent;
+  display: flex;
+  transition: border-color var(--transition-time-icon) linear,
+    padding var(--transition-time-input) var(--easing);
+
+  &__input {
+    background: transparent;
+    border: none;
+    color: var(--color-highlight);
+    font-size: var(--font-size);
+    opacity: 0;
+    outline: none;
+    padding: 0;
+    transition: width var(--transition-time-input) var(--easing),
+    padding var(--transition-time-input) var(--easing),
+    opacity var(--transition-time-input) linear;
+    width: 0;
+
+    &::placeholder {
+      color: var(--color);
+      opacity: 0.75;
+    }
+  }
+
+  &__icon-container {
+    height: calc(var(--font-size) + 2rem);
+    position: relative;
+    width: calc(var(--font-size) + 2rem);
+  }
+
+  &__label,
+  &__submit {
+    color: var(--color);
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--color-highlight);
+    }
+  }
+
+  &__label {
+    transition: transform var(--transition-time-icon) var(--easing), color 0.1s;
+  }
+
+  &__submit {
+    background: none;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 0 0 4px inset transparent;
+    display: none;
+    outline: none;
+    transition: color 0.1s, box-shadow 0.1s;
+
+    svg {
+      display: none;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 4px inset var(--color-highlight);
+    }
+  }
+
+  &:focus-within {
+    border-color: var(--color);
+
+    #{$root} {
+      &__input {
+        opacity: 1;
+        padding: 0 1rem 0 2rem;
+        width: calc(var(--font-size) * 12);
+      }
+
+      &__label {
+        transform: scale(0.5);
+      }
+
+      &__submit {
+        animation: unhide var(--transition-time-icon) steps(1, end);
+        display: block;
+      }
+    }
+  }
+}
+
+@keyframes unhide {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+
+  to {
+    height: auto;
+    opacity: 1;
+  }
+}
+
