@@ -233,4 +233,20 @@ a {
   }
 }
 
+.mat-drawer-content {
+  overflow: hidden !important;
+}
+
+.no-scroll {
+  overflow: hidden !important;
+}
+
+#drawer {
+  min-height: 100vh;
+}
+
+input:-webkit-autofill {
+  /* Custom styles for autofilled inputs */
+  padding: 0 1rem 0 1rem;
+}
 

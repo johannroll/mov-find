@@ -30,7 +30,7 @@ import { RouterLink } from "@angular/router";
                 </li>
                 } @empty {
                 <div>
-                    <h2>You haven't added any movies yet</h2>
+                    <h2>No added movies yet</h2>
                 </div>
                 }
             </ul>

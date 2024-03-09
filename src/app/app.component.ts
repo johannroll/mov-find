@@ -355,4 +355,12 @@ export class AppComponent {
     this.toggleSearch = false;
   }
 
+  openDrawer() {
+    document.body.classList.add('no-scroll');
+  }
+
+  closeDrawer() {
+    document.body.classList.remove('no-scroll');
+  }
+
 }
