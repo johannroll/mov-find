@@ -24,6 +24,10 @@ export class SnackbarService {
         });
     }
 
+    displayError(error: string) {
+        this.snackbar.open(error, 'Dismiss', {  duration: 2000});
+    }
+
     private handleUndoAction(movieId: string) {
         this.watchlistService.remove$.next(movieId)
         console.log('Undo action triggered');

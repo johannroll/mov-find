@@ -2,11 +2,12 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { EMPTY, Observable, Subject, forkJoin } from "rxjs";
-import { catchError, concatMap, distinctUntilChanged, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, concatMap, debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import { Movie } from "../../shared/interfaces/movie";
 import { TmdbResponse } from "../../shared/interfaces/tmdbResponse";
 import { Genre } from "../../shared/interfaces/genre";
 import { GenresResponse } from "../../shared/interfaces/genreResponse";
+import { FormControl } from "@angular/forms";
 
 export interface MoviesState {
   movies: Movie[];
@@ -29,6 +30,11 @@ export interface ActorState {
 
 }
 
+export interface SearchState {
+  results: Movie[];
+  loading: boolean;
+}
+
 export interface ScrollState {
   scrollTo: number;
 }
@@ -40,6 +46,8 @@ export interface ScrollState {
 })
 
 export class MoviesService {
+
+
   
   // initial scroll state
 scrollToTop : number = 0;
@@ -79,6 +87,11 @@ private options = {
     loading: true
   })
 
+  searchState = signal<SearchState>({
+    results: [],
+    loading: true,
+  })
+
   #movielists = signal<string[]> ([
     'now_playing',
     'popular',
@@ -101,6 +114,8 @@ private options = {
   laodingDetail = computed(() => this.movieDetailState().loading);
   loadingActor = computed(() => this.actorState().loading);
   actorDetail = computed(() => this.actorState().data);
+  searchResults = computed(() => this.searchState().results);
+  searchLoading = computed(() => this.searchState().loading);
   
   //source
   genres$ = this.getGenres();
@@ -113,6 +128,19 @@ private options = {
     startWith(this.movielist()[0]),
     map((choice) => this.formatString(choice))
   ));
+
+  searchFormControl = new FormControl();
+
+  private searchChanged$ = this.searchFormControl.valueChanges.pipe(
+    debounceTime(500),
+    distinctUntilChanged(),
+    tap(() => this.searchState.update((state) => ({
+      ...state,
+      results: [],
+      loading: true,
+    }))),
+    switchMap((searchterm) => this.fetchSearchResults(searchterm))
+  );
   
   private moviesByGenre$ = this.genre$.pipe(
     tap(() => this.state.update((state) => ({
@@ -249,6 +277,14 @@ private options = {
         }))
     );
 
+    this.searchChanged$.pipe(takeUntilDestroyed()).subscribe((response) =>
+        this.searchState.update((state) => ({
+          ...state,
+          results: [...state.results, ...response.movies],
+          loading: false,
+        }))
+    );
+
     this.error$.pipe(takeUntilDestroyed()).subscribe((error) =>
     this.state.update((state) => ({
         ...state,
@@ -376,6 +412,21 @@ private options = {
 
       return []
     }
+  }
+
+  fetchSearchResults(searchterm: string) {
+    return this.http
+    .get<TmdbResponse>(`https://api.themoviedb.org/3/search/movie?query=${searchterm}&include_adult=false&language=en-US&page=1`, this.options)
+    .pipe(
+      catchError((err) => EMPTY),
+      map(( response ) => {
+        const movies = response.results
+        const lastKnownMovie = movies.length
+          ? movies[movies.length -1].title
+          : null; 
+          return { movies, lastKnownMovie }
+        }       
+      )) 
   }
 
   formatString(string: string) {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, RouterOutlet, Router, RouterLink } from '@angular/router';
 import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
@@ -19,6 +19,7 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTabsModule } from '@angular/material/tabs'
 import { StorageService } from './Services/StorageService/storage.service';
 import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
+import { SnackbarService } from './Services/SnackbarService/snackbar.service';
 
 
 @Component({
@@ -85,7 +86,10 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
             </li>
           </ul>
           <div class="searchbar-wrapper">
-            <app-searchbar></app-searchbar>
+            <app-searchbar
+            [searchFormControl]="movieService.searchFormControl"
+            [searchResults]="movieService.searchResults()"
+            ></app-searchbar>
           </div>
           <ul class="nav-items category">
             @if (movieService.state().genre === null) {
@@ -164,15 +168,18 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
       z-index: 1000;
       top: 0px;
       height: 60px;
-      box-shadow: 0px 3px 20px 3px rgb(230,230,230,0.2);
+      box-shadow: 0px 3px 30px 3px rgb(230,230,230,0.2);
       background: rgb(58,58,58);
       /* background: rgb(58,58,58, 0.8);
        backdrop-filter: blur(12px); */
     }
 
     .searchbar-wrapper {
-      
       margin-right: auto;
+    }
+
+    .search-menu {
+      width: 320px;
     }
 
     #drawer {
@@ -328,6 +335,7 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
 export class AppComponent {
   movieService = inject(MoviesService)
   storageService = inject(StorageService)
+  snackbarService = inject(SnackbarService)
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('searchbar') searchbar!: ElementRef;
 
@@ -337,6 +345,16 @@ export class AppComponent {
 
 
   panelOpenState: boolean = false;
+
+  constructor() {
+    effect(() => {
+      const error = this.movieService.error();
+
+      if (error != null) {
+        this.snackbarService.displayError(error);
+      }
+    })
+  }
     
   close() {
     this.sidenav.close();

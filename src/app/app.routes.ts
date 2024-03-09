@@ -23,12 +23,8 @@ export const routes: Routes = [
         import('./watchlist/watchlist.component'),
     },
     {
-        path: '',
+        path: '**',
         redirectTo: 'home',
         pathMatch: 'full',
-    },
-    {
-        path: '**', 
-        redirectTo: 'home', 
-    },
+    }
 ];

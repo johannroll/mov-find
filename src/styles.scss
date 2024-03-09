@@ -233,15 +233,26 @@ a {
   }
 }
 
-input {
-  /* Custom styles for autofilled inputs */
-  padding: 0 1rem 0 1rem;
+// input {
+//   /* Custom styles for autofilled inputs */
+//   padding: 0 1rem 0 1rem;
+// }
+
+// @media screen and (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+//   /* Targeting high-resolution devices, common in iOS */
+//   input {
+//     padding: 0 1rem 0 1rem; /* Increase padding for iOS devices */
+//   }
+// }
+
+.custom-autocomplete {
+  width: calc(100%); 
+  margin-left: calc(-46px); 
+  border-top: 15px !important;
+  border-radius: 5px !important;
+  margin-top: 12.15px !important;
+  background-color: transparent;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  /* Targeting high-resolution devices, common in iOS */
-  input {
-    padding: 0 1rem 0 1rem; /* Increase padding for iOS devices */
-  }
-}
+
 
