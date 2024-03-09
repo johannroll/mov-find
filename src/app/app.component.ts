@@ -313,11 +313,12 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
 
     .selection {
      text-align: center;
-     padding-right: 0px;
+     padding-right: 10px;
     }
 
     .content {
       padding-top: 80px;
+      overflow-wrap: break-word;
     }
 
   }
