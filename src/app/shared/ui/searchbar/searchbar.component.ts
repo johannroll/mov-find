@@ -25,7 +25,7 @@ import { stopPropagation } from "../../utils/stop-propagation.directive";
                 (focus)="setFocusState(true)" 
                 (blur)="setFocusState(false)"
             >
-            @if (isFormFocused) {
+            @if (this.movieService.formFocus()) {
                 @if (searchFormControl.value) {
                     <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
                     <mat-icon>close</mat-icon>
@@ -47,16 +47,22 @@ import { stopPropagation } from "../../utils/stop-propagation.directive";
             }
             <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
                 @for (movie of searchResults; track $index) {
-                <mat-option [routerLink]="['detail', movie.id]"  (click)="this.movieService.movieDetailId$.next(+movie.id)" [value]="movie.title" >
-                    @if ($index < 2) {
-                        <img class="search-image" priority ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" height="70" width="50">
-                    } @else {
-                        <img class="search-image" priority ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}"  height="70" width="50">
-                    }
-                    <span> {{ movie.title }}</span> 
-                    @if (movie.release_date !== '') {
-                        <small> ({{movie.release_date.substring(0,4)}})</small>
-                    }
+                <mat-option [routerLink]="['detail', movie.id]"  (click)="this.movieService.movieDetailId$.next(+movie.id); setFocusState(false)" [value]="movie.title" >
+                    <div class="search-item-container">
+                        <div>
+                            @if ($index < 4) {
+                                <img class="search-image" priority [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" height="70" width="50">
+                            } @else {
+                                <img class="search-image" [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" height="70" width="50">
+                            }
+                        </div>
+                        <div>
+                            <span> {{ movie.title }}</span>
+                            @if (movie.release_date !== '') {
+                                <small> ({{movie.release_date.substring(0,4)}})</small>
+                            }
+                        </div>
+                    </div>
                 </mat-option>
                 }
             </mat-autocomplete>
@@ -68,6 +74,12 @@ import { stopPropagation } from "../../utils/stop-propagation.directive";
             border-radius: 4px;
             vertical-align: middle;
             margin: 5px 2px;
+        }
+
+        .search-item-container {
+            display: flex;
+            gap: 10px;
+            align-items: center
         }
 
     `]
@@ -89,18 +101,23 @@ export class SearchbarComponent {
     }, 1);
     }
 
-    isFormFocused: boolean = false;
 
   setFocusState(focused: boolean): void {
-    console.log(this.isFormFocused);
+    console.log(this.movieService.formFocus());
     // Optionally, add logic to delay resetting the state to handle instant blur-to-focus transitions between inputs
     if (focused) {
-      this.isFormFocused = true;
+      this.movieService.searchState.update((state) => ({
+        ...state,
+          formFocus: true
+      }))
     } else {
       setTimeout(() => {
         // Use a timeout to allow for checking if another element receives focus immediately
         if (!document.activeElement || document.activeElement.tagName === 'BODY') {
-          this.isFormFocused = false;
+            this.movieService.searchState.update((state) => ({
+                ...state,
+                  formFocus: false
+              }))
         }
       }, 1);
     }

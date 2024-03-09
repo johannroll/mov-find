@@ -91,17 +91,19 @@ import { SnackbarService } from './Services/SnackbarService/snackbar.service';
             [searchResults]="movieService.searchResults()"
             ></app-searchbar>
           </div>
-          <ul class="nav-items category">
-            @if (movieService.state().genre === null) {
-              <li class="selection">
-                 <h1>{{ movieService.selection() }}</h1>
-              </li>
-            } @else {
-              <li class="selection">
-                 <h1>{{ movieService.genre() }}</h1>
-              </li>
-            }
-          </ul>
+          @if (!movieService.formFocus()) {
+            <ul class="nav-items category">
+              @if (movieService.state().genre === null) {
+                <li class="selection">
+                   <h1>{{ movieService.selection() }}</h1>
+                </li>
+              } @else {
+                <li class="selection">
+                   <h1>{{ movieService.genre() }}</h1>
+                </li>
+              }
+            </ul>
+          }
       
     </div>
   

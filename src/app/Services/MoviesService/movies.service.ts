@@ -33,6 +33,7 @@ export interface ActorState {
 export interface SearchState {
   results: Movie[];
   loading: boolean;
+  formFocus: boolean;
 }
 
 export interface ScrollState {
@@ -90,6 +91,7 @@ private options = {
   searchState = signal<SearchState>({
     results: [],
     loading: true,
+    formFocus: false
   })
 
   #movielists = signal<string[]> ([
@@ -116,6 +118,7 @@ private options = {
   actorDetail = computed(() => this.actorState().data);
   searchResults = computed(() => this.searchState().results);
   searchLoading = computed(() => this.searchState().loading);
+  formFocus = computed(() => this.searchState().formFocus);
   
   //source
   genres$ = this.getGenres();
