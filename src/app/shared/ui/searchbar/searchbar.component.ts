@@ -22,17 +22,28 @@ import { stopPropagation } from "../../utils/stop-propagation.directive";
                 class="search__input" type="text" 
                 placeholder="Search" id="searchInput"
                 [(ngModel)]="searchFormControl.value === null ? '' : searchFormControl.value"
+                (focus)="setFocusState(true)" 
+                (blur)="setFocusState(false)"
             >
-            @if (searchFormControl.value) {
-                <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
-                <mat-icon>close</mat-icon>
-                </button>
+            @if (isFormFocused) {
+                @if (searchFormControl.value) {
+                    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
+                    <mat-icon>close</mat-icon>
+                    </button>
+                } @else {
+                    <div class="search__icon-container">
+                        <label for="searchInput" class="search__label" aria-label="Search">
+                            <svg viewBox="0 0 1000 1000" title="Search"><path fill="currentColor" d="M408 745a337 337 0 1 0 0-674 337 337 0 0 0 0 674zm239-19a396 396 0 0 1-239 80 398 398 0 1 1 319-159l247 248a56 56 0 0 1 0 79 56 56 0 0 1-79 0L647 726z"/></svg>
+                        </label>
+                    </div>
+                }
             } @else {
                 <div class="search__icon-container">
                     <label for="searchInput" class="search__label" aria-label="Search">
                         <svg viewBox="0 0 1000 1000" title="Search"><path fill="currentColor" d="M408 745a337 337 0 1 0 0-674 337 337 0 0 0 0 674zm239-19a396 396 0 0 1-239 80 398 398 0 1 1 319-159l247 248a56 56 0 0 1 0 79 56 56 0 0 1-79 0L647 726z"/></svg>
                     </label>
                 </div>
+
             }
             <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
                 @for (movie of searchResults; track $index) {
@@ -77,5 +88,22 @@ export class SearchbarComponent {
         inputElement?.focus();
     }, 1);
     }
+
+    isFormFocused: boolean = false;
+
+  setFocusState(focused: boolean): void {
+    console.log(this.isFormFocused);
+    // Optionally, add logic to delay resetting the state to handle instant blur-to-focus transitions between inputs
+    if (focused) {
+      this.isFormFocused = true;
+    } else {
+      setTimeout(() => {
+        // Use a timeout to allow for checking if another element receives focus immediately
+        if (!document.activeElement || document.activeElement.tagName === 'BODY') {
+          this.isFormFocused = false;
+        }
+      }, 1);
+    }
+  }
 
 }
