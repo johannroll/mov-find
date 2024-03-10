@@ -8,6 +8,7 @@ import { TmdbResponse } from "../../shared/interfaces/tmdbResponse";
 import { Genre } from "../../shared/interfaces/genre";
 import { GenresResponse } from "../../shared/interfaces/genreResponse";
 import { FormControl } from "@angular/forms";
+import { Router } from "@angular/router";
 
 export interface MoviesState {
   movies: Movie[];
@@ -47,9 +48,9 @@ export interface ScrollState {
 })
 
 export class MoviesService {
+ router = inject(Router)
 
-
-  
+currentRoute = computed(() => this.router.url);  
   // initial scroll state
 scrollToTop : number = 0;
 scrollState = signal<ScrollState>({

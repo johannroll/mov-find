@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, RouterOutlet, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, RouterOutlet, Router, RouterLink, ActivatedRouteSnapshot } from '@angular/router';
 import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
@@ -104,7 +104,6 @@ import { SnackbarService } from './Services/SnackbarService/snackbar.service';
               }
             </ul>
           }
-      
     </div>
   
     <mat-drawer-container hasBackdrop="true"  (backdropClick)="close()">
@@ -338,6 +337,8 @@ export class AppComponent {
   movieService = inject(MoviesService)
   storageService = inject(StorageService)
   snackbarService = inject(SnackbarService)
+  activatedRoute = inject(ActivatedRoute)
+  router = inject(Router)
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('searchbar') searchbar!: ElementRef;
 
@@ -345,9 +346,8 @@ export class AppComponent {
   stateCtrl = new FormControl('');
   filteredStates!: Observable<any[]>;
 
-
   panelOpenState: boolean = false;
-
+  url: string = ''
   constructor() {
     effect(() => {
       const error = this.movieService.error();
@@ -356,6 +356,7 @@ export class AppComponent {
         this.snackbarService.displayError(error);
       }
     })
+
   }
     
   close() {
@@ -364,16 +365,16 @@ export class AppComponent {
 
   searchText = '';
 
-  toggleSearch: boolean = false;
+  // toggleSearch: boolean = false;
 
-  openSearch() {
-    this.toggleSearch = true;
-    this.searchbar.nativeElement.focus();
-  }
-  searchClose() {
-    this.searchText = '';
-    this.toggleSearch = false;
-  }
+  // openSearch() {
+  //   this.toggleSearch = true;
+  //   this.searchbar.nativeElement.focus();
+  // }
+  // searchClose() {
+  //   this.searchText = '';
+  //   this.toggleSearch = false;
+  // }
 
   openDrawer() {
     document.body.classList.add('no-scroll');

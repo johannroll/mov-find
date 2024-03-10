@@ -1,19 +1,19 @@
-import { Component, Input, inject } from "@angular/core";
+import { Component, Input, ViewChild, inject } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatAutocompleteModule, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import { Movie } from "../../interfaces/movie";
 import { Router, RouterLink } from "@angular/router";
 import { NgOptimizedImage } from "@angular/common";
 import { MoviesService } from "../../../Services/MoviesService/movies.service";
 import { stopPropagation } from "../../utils/stop-propagation.directive";
-
+import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
     standalone: true,
     selector: 'app-searchbar',
-    imports: [MatIconModule,MatButtonModule, FormsModule, ReactiveFormsModule, MatAutocompleteModule, RouterLink, NgOptimizedImage, stopPropagation],
+    imports: [MatIconModule,MatButtonModule, FormsModule, ReactiveFormsModule, MatAutocompleteModule, RouterLink, NgOptimizedImage, stopPropagation, MatProgressSpinnerModule],
     template: `
          <form class="search">
             <input 
@@ -27,9 +27,14 @@ import { stopPropagation } from "../../utils/stop-propagation.directive";
             >
             @if (this.movieService.formFocus()) {
                 @if (searchFormControl.value) {
-                    <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
-                    <mat-icon>close</mat-icon>
-                    </button>
+                    @if (!movieService.searchLoading()) {
+                        <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    } @else {
+                        <button mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()"></button>
+                    }
+
                 } @else {
                     <div class="search__icon-container">
                         <label for="searchInput" class="search__label" aria-label="Search">
@@ -37,13 +42,12 @@ import { stopPropagation } from "../../utils/stop-propagation.directive";
                         </label>
                     </div>
                 }
-            } @else {
+            } @else if (!this.movieService.formFocus()) {
                 <div class="search__icon-container">
                     <label for="searchInput" class="search__label" aria-label="Search">
                         <svg viewBox="0 0 1000 1000" title="Search"><path fill="currentColor" d="M408 745a337 337 0 1 0 0-674 337 337 0 0 0 0 674zm239-19a396 396 0 0 1-239 80 398 398 0 1 1 319-159l247 248a56 56 0 0 1 0 79 56 56 0 0 1-79 0L647 726z"/></svg>
                     </label>
                 </div>
-
             }
             <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
                 @for (movie of searchResults; track $index) {
@@ -82,6 +86,8 @@ import { stopPropagation } from "../../utils/stop-propagation.directive";
             align-items: center
         }
 
+       
+
     `]
 })
 
@@ -90,12 +96,13 @@ export class SearchbarComponent {
     @Input({ required: true }) searchFormControl!: FormControl
     @Input({ required: true }) searchResults! : Movie[]
 
+    @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
+
     clearSearch(event: MouseEvent) {
-    event.stopPropagation(); // Stop click event from propagating
-    this.searchFormControl.setValue(''); // Clear the search form control
-    event.preventDefault(); // Prevent any default action
+    event.stopPropagation(); 
+    this.searchFormControl.setValue(''); 
+    event.preventDefault(); 
     setTimeout(() => {
-        // Use a timeout to delay refocusing, allowing any other related events to process first.
         const inputElement = document.getElementById('searchInput');
         inputElement?.focus();
     }, 1);
@@ -103,23 +110,19 @@ export class SearchbarComponent {
 
 
   setFocusState(focused: boolean): void {
-    console.log(this.movieService.formFocus());
-    // Optionally, add logic to delay resetting the state to handle instant blur-to-focus transitions between inputs
     if (focused) {
       this.movieService.searchState.update((state) => ({
         ...state,
           formFocus: true
       }))
     } else {
-      setTimeout(() => {
-        // Use a timeout to allow for checking if another element receives focus immediately
-        if (!document.activeElement || document.activeElement.tagName === 'BODY') {
+        setTimeout(() => {
             this.movieService.searchState.update((state) => ({
                 ...state,
-                  formFocus: false
-              }))
-        }
-      }, 1);
+                formFocus: false
+            }))
+        }, 1);
+        this.autocompleteTrigger.closePanel();
     }
   }
 

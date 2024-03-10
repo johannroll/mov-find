@@ -179,6 +179,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
         .slide {
             padding: 0px 2px;
         }
+        
         .slide a {
             padding: 1px;
         }
