@@ -99,10 +99,11 @@ export class SearchbarComponent {
     @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
     clearSearch(event: MouseEvent) {
-    event.stopPropagation(); 
-    this.searchFormControl.setValue(''); 
-    event.preventDefault(); 
+    event.stopPropagation(); // Stop click event from propagating
+    this.searchFormControl.setValue(''); // Clear the search form control
+    event.preventDefault(); // Prevent any default action
     setTimeout(() => {
+        // Use a timeout to delay refocusing, allowing any other related events to process first.
         const inputElement = document.getElementById('searchInput');
         inputElement?.focus();
     }, 1);
@@ -110,19 +111,24 @@ export class SearchbarComponent {
 
 
   setFocusState(focused: boolean): void {
+    console.log(this.movieService.formFocus());
+    // Optionally, add logic to delay resetting the state to handle instant blur-to-focus transitions between inputs
     if (focused) {
       this.movieService.searchState.update((state) => ({
         ...state,
           formFocus: true
       }))
     } else {
-        setTimeout(() => {
-            this.movieService.searchState.update((state) => ({
-                ...state,
-                formFocus: false
-            }))
+      setTimeout(() => {
+          if (!document.activeElement || document.activeElement.tagName === 'BODY') {
+              this.movieService.searchState.update((state) => ({
+                  ...state,
+                    formFocus: false
+                }))
+                this.autocompleteTrigger.closePanel();
+          }
         }, 1);
-        this.autocompleteTrigger.closePanel();
+        // Use a timeout to allow for checking if another element receives focus immediately
     }
   }
 
