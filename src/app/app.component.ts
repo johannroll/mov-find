@@ -4,8 +4,8 @@ import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatIconModule } from '@angular/material/icon';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Observable, map, tap } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Observable, Observer, fromEvent, map, merge, tap } from 'rxjs';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +20,8 @@ import { MatTabsModule } from '@angular/material/tabs'
 import { StorageService } from './Services/StorageService/storage.service';
 import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
 import { SnackbarService } from './Services/SnackbarService/snackbar.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NetworkConnectionService } from './shared/utils/network-connection.service';
 
 
 @Component({
@@ -338,6 +340,7 @@ export class AppComponent {
   storageService = inject(StorageService)
   snackbarService = inject(SnackbarService)
   activatedRoute = inject(ActivatedRoute)
+  networkService = inject(NetworkConnectionService)
   router = inject(Router)
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('searchbar') searchbar!: ElementRef;
@@ -348,16 +351,34 @@ export class AppComponent {
 
   panelOpenState: boolean = false;
   url: string = ''
+  onlineMessage: string = '';
   constructor() {
-    effect(() => {
-      const error = this.movieService.error();
+    this.networkService.checkConnection$.pipe(takeUntilDestroyed(), tap((status) => console.log('Network status: ', status))).subscribe((online) => {
+      this.networkService.state.update((state) => ({
+          ...state,
+          online: online
+      }))
+    })
 
+    effect(() => {
+      });
+      const error = this.movieService.error();
+      
       if (error != null) {
         this.snackbarService.displayError(error);
       }
-    })
+      
+      
+      effect(() => {
+        const network = this.networkService.isOnline();
+        
+          if (!network) {
+            this.snackbarService.displayError('No internet connection');
+          }
+      })
 
   }
+  
     
   close() {
     this.sidenav.close();

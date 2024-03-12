@@ -149,9 +149,9 @@ export interface ScrollState {
                 {
                     <div class="card" routerLink="/detail/{{movie.id}}" (click)="movieService.scrollState.set({ scrollTo: scrollPosition() })">
                         @if($index < 2) {
-                            <img priority class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500">
+                            <img priority class="image" [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w500/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" width="300" height="500">
                         } @else {
-                            <img class="image" ngSrc="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" width="300" height="500" (click)="this.movieService.movieDetailId$.next(+movie.id)" >
+                            <img class="image" [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w500/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" width="300" height="500" (click)="this.movieService.movieDetailId$.next(+movie.id)" >
                         }
                         @if (watchlistService.isMovieOnWatchlist(movie.id)) {
                             <button mat-mini-fab color="warn" class="btn-favorite-home" stopPropagation (click)="watchlistService.remove$.next(movie.id)">
@@ -165,7 +165,7 @@ export interface ScrollState {
                     </div>     
                 }
             </div>
-            @if (movieService.loading()) {  
+            @if (movieService.loading() && !movieService.error()) {  
                 <div class="loader"></div>
             } 
             <!-- <div >

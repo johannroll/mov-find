@@ -26,23 +26,12 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                 (blur)="setFocusState(false)"
             >
             @if (this.movieService.formFocus()) {
-                @if (searchFormControl.value) {
-                    @if (!movieService.searchLoading()) {
-                        <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
-                            <mat-icon>close</mat-icon>
-                        </button>
-                    } @else {
-                        <button mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()"></button>
-                    }
-
-                } @else {
-                    <div class="search__icon-container">
-                        <label for="searchInput" class="search__label" aria-label="Search">
-                            <svg viewBox="0 0 1000 1000" title="Search"><path fill="currentColor" d="M408 745a337 337 0 1 0 0-674 337 337 0 0 0 0 674zm239-19a396 396 0 0 1-239 80 398 398 0 1 1 319-159l247 248a56 56 0 0 1 0 79 56 56 0 0 1-79 0L647 726z"/></svg>
-                        </label>
-                    </div>
+                @if (movieService.searchLoading()) {
+                    <button mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()"></button>
+                    
+               
                 }
-            } @else if (!this.movieService.formFocus()) {
+            } @if (!this.movieService.formFocus() && !movieService.searchLoading()) {
                 <div class="search__icon-container">
                     <label for="searchInput" class="search__label" aria-label="Search">
                         <svg viewBox="0 0 1000 1000" title="Search"><path fill="currentColor" d="M408 745a337 337 0 1 0 0-674 337 337 0 0 0 0 674zm239-19a396 396 0 0 1-239 80 398 398 0 1 1 319-159l247 248a56 56 0 0 1 0 79 56 56 0 0 1-79 0L647 726z"/></svg>
@@ -51,7 +40,7 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
             }
             <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
                 @for (movie of searchResults; track $index) {
-                <mat-option [routerLink]="['detail', movie.id]"  (click)="this.movieService.movieDetailId$.next(+movie.id); setFocusState(false)" [value]="movie.title" >
+                <mat-option [routerLink]="['detail', movie.id]" (click)="this.movieService.movieDetailId$.next(+movie.id); setFocusState(true)" [value]="movie.title" >
                     <div class="search-item-container">
                         <div>
                             @if ($index < 4) {
@@ -70,7 +59,13 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                 </mat-option>
                 }
             </mat-autocomplete>
+            @if (this.movieService.formFocus() && !movieService.searchLoading()) {
+                <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
         </form>
+        
     `,
     styles: [`
         .search-image {
@@ -123,12 +118,13 @@ export class SearchbarComponent {
           if (!document.activeElement || document.activeElement.tagName === 'BODY') {
               this.movieService.searchState.update((state) => ({
                   ...state,
-                    formFocus: false
+                    formFocus: false,
+                   
                 }))
-                this.autocompleteTrigger.closePanel();
-          }
-        }, 1);
-        // Use a timeout to allow for checking if another element receives focus immediately
+                // this.autocompleteTrigger.closePanel();
+            }
+        }, 50);
+        
     }
   }
 

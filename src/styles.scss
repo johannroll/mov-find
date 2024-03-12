@@ -87,20 +87,20 @@ a {
 }
 
 .mat-mdc-snack-bar-container .mdc-snackbar__surface {
-  /* border-radius: 4px !important; */
+  border-radius: 4px !important; 
   width: 300px !important;
 }
 
-/* .mat-mdc-button.mat-mdc-snack-bar-action {
-  color: white !important;
-} */
+.mat-mdc-button.mat-mdc-snack-bar-action {
+  color: azure !important;
+} 
 
 .mdc-snackbar__surface {
-    background-color: #8e9aa0 !important;
+    background-color: #f83131 !important;
 }
 
 .mdc-snackbar__label {
-    color: rgb(41, 41, 41) !important;
+    color: azure !important;
 }
 
 

@@ -1,14 +1,15 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { EMPTY, Observable, Subject, forkJoin } from "rxjs";
-import { catchError, concatMap, debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, concatMap, debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import { Movie } from "../../shared/interfaces/movie";
 import { TmdbResponse } from "../../shared/interfaces/tmdbResponse";
 import { Genre } from "../../shared/interfaces/genre";
 import { GenresResponse } from "../../shared/interfaces/genreResponse";
 import { FormControl } from "@angular/forms";
-import { Router } from "@angular/router";
+import { NavigationEnd, NavigationStart, Router } from "@angular/router";
+import { SnackbarService } from "../SnackbarService/snackbar.service";
 
 export interface MoviesState {
   movies: Movie[];
@@ -48,8 +49,8 @@ export interface ScrollState {
 })
 
 export class MoviesService {
- router = inject(Router)
-
+router = inject(Router)
+snackbarService = inject(SnackbarService)
 currentRoute = computed(() => this.router.url);  
   // initial scroll state
 scrollToTop : number = 0;
@@ -290,20 +291,20 @@ private options = {
     );
 
     this.error$.pipe(takeUntilDestroyed()).subscribe((error) =>
-    this.state.update((state) => ({
-        ...state,
-        error,
-    }))
-
+      this.state.update((state) => ({
+          ...state,
+          error,
+      }))
     );
-
   }
   
   private fetchMovies(movielist: string, page: number) {
     return this.http
         .get<TmdbResponse>(`https://api.themoviedb.org/3/movie/${movielist}?language=en-US&page=${page}`, this.options)
         .pipe(
-            catchError((err) => EMPTY),
+            catchError((err) => {
+              this.handleError(err)
+              return EMPTY}),
             map(( response ) => {
               const movies = response.results
               const lastKnownMovie = movies.length
@@ -318,7 +319,9 @@ private options = {
     return this.http
       .get<GenresResponse>('https://api.themoviedb.org/3/genre/movie/list?language=en', this.options)
       .pipe(
-          catchError((err) => EMPTY),
+          catchError((err) => {
+            this.handleError(err)
+            return EMPTY}),
           map((response) => {
             return response.genres
           })
@@ -327,9 +330,11 @@ private options = {
 
   private fetchMoviesByGenre(genreId: string, page: number) {
     return this.http
-      .get<TmdbResponse>(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=true&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${genreId}`, this.options)
+      .get<TmdbResponse>(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=true&language=en-US&page=${page + 111234}&sort_by=popularity.desc&with_genres=${genreId}`, this.options)
       .pipe(
-        catchError((err) => EMPTY),
+        catchError((err) => {
+          this.handleError(err)
+          return EMPTY}),
         map(( response ) => {
           const movies = response.results
           const lastKnownMovie = movies.length
@@ -345,7 +350,9 @@ private options = {
     return this.http
       .get(`https://api.themoviedb.org/3/movie/${movieId}?language=en-US`, this.options)
       .pipe(
-        catchError((err) => EMPTY),
+        catchError((err) => {
+          this.handleError(err)
+          return EMPTY}),
         map(( response ) => {
               return response
           }
@@ -357,7 +364,9 @@ private options = {
     return this.http
       .get(`https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`, this.options)
       .pipe(
-        catchError((err) => EMPTY),
+        catchError((err) => {
+          this.handleError(err)
+          return EMPTY}),
         map(( response ) => {
               return response
           }
@@ -369,7 +378,9 @@ private options = {
     return this.http
       .get(`https://api.themoviedb.org/3/movie/${movieId}/watch/providers`, this.options)
       .pipe(
-        catchError((err) => EMPTY),
+        catchError((err) => {
+          this.handleError(err)
+          return EMPTY}),
         map(( response ) => {
               return response
           }
@@ -381,7 +392,9 @@ private options = {
     return this.http
     .get(`https://api.themoviedb.org/3/movie/${movieId}/videos`, this.options)
     .pipe(
-      catchError((err) => EMPTY),
+      catchError((err) => {
+        this.handleError(err)
+        return EMPTY}),
       map(( response ) => {
             return response
         }
@@ -393,7 +406,9 @@ private options = {
     return this.http
     .get(`https://api.themoviedb.org/3/person/${actorId}`, this.options)
     .pipe(
-      catchError((err) => EMPTY),
+      catchError((err) => {
+        this.handleError(err)
+        return EMPTY}),
       map(( response ) => {
             return response
         }
@@ -422,7 +437,9 @@ private options = {
     return this.http
     .get<TmdbResponse>(`https://api.themoviedb.org/3/search/movie?query=${searchterm}&include_adult=false&language=en-US&page=1`, this.options)
     .pipe(
-      catchError((err) => EMPTY),
+      catchError((err) => {
+        this.handleError(err)
+        return EMPTY}),
       map(( response ) => {
         const movies = response.results
         const lastKnownMovie = movies.length
@@ -438,5 +455,20 @@ private options = {
     .split('_')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLocaleLowerCase())
     .join(' ');
+  }
+
+  private handleError(err: HttpErrorResponse) {
+    // Generic error if no cases match
+    if (err.url && err.status === 404) {
+      this.error$.next('Not found');
+    } else if (err.url && err.status === 500) {
+      this.error$.next('Server error, please try again');
+    } else if (err.url && err.status === 400) {
+      this.error$.next('Invalid request')
+    }
+
+    if (err) {
+      this.movielist$.next('now_playing')
+    }
   }
 }

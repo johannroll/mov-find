@@ -249,7 +249,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
         <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
         </button>
-        @if (movieService.movieDetailState().loading) {
+        @if (movieService.movieDetailState().loading && !movieService.error()) {
             <div class="loader-wrapper">
                 <div class="loader"></div>
             </div>
@@ -268,7 +268,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                 <!-- <h1>{{ movie.title }}</h1> -->
                 <div class="movie-detail-container">
                     
-                    <img class="image" priority  ngSrc="https://image.tmdb.org/t/p/w500/{{ movieService.movieDetail()[0].poster_path }}" width="300" height="500">
+                    <img class="image" priority  [ngSrc]="movieService.movieDetail()[0].poster_path !== null ? 'https://image.tmdb.org/t/p/w500/' + movieService.movieDetail()[0].poster_path : 'https://fakeimg.pl/600x750?text=No+image'" width="300" height="500">
                     <div class="movie-details">
                         <p class="released">
                             @if (movieService.movieDetail()[0].status === "Released") {
