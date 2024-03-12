@@ -37,6 +37,18 @@ a {
     align-items: center;
 }
 
+.mat-drawer-content {
+  overflow: hidden !important;
+}
+
+.mat-drawer:not(.mat-drawer-side) {
+  position: fixed;
+}
+
+.mat-drawer-backdrop {
+  position: fixed !important;
+}
+
 .loader-container {
     position: fixed;
     height: 100%;
@@ -232,18 +244,6 @@ a {
     opacity: 1;
   }
 }
-
-// input {
-//   /* Custom styles for autofilled inputs */
-//   padding: 0 1rem 0 1rem;
-// }
-
-// @media screen and (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-//   /* Targeting high-resolution devices, common in iOS */
-//   input {
-//     padding: 0 1rem 0 1rem; /* Increase padding for iOS devices */
-//   }
-// }
 
 .custom-autocomplete {
   width: calc(100%); 

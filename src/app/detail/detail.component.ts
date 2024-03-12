@@ -77,7 +77,8 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
 
         .image {
             width: 100%;
-            max-width: 350px;
+            height: 100%;
+            max-width: 340px;
             object-fit: cover;
             box-shadow: 0px 3px 15px 3px rgb(0, 0, 0, 0.4);
         }
@@ -249,7 +250,7 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
         <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
         </button>
-        @if (movieService.movieDetailState().loading && !movieService.error()) {
+        @if (movieService.movieDetailState().loading) {
             <div class="loader-wrapper">
                 <div class="loader"></div>
             </div>

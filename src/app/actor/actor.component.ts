@@ -72,7 +72,7 @@ import { MatIconModule } from '@angular/material/icon';
         </button>
         <div class="container">
             <div class="actor-detail-container">
-                @if (movieService.loadingActor() && !movieService.error()) {
+                @if (movieService.loadingActor()) {
                     <div class="loader-wrapper">
                         <div class="loader"></div>
                     </div>

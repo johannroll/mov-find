@@ -57,8 +57,10 @@ export interface ScrollState {
             margin-bottom: 3rem;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            place-items: center; 
             padding: 5px;
             border: none;
+            place-items: center; 
             
 
         }
@@ -70,12 +72,65 @@ export interface ScrollState {
         }
 
 
-        @media (max-width: 700px) {
+        @media (max-width: 720px) {
             .movie-list {
-                grid-template-columns: 1fr; 
+                grid-template-columns: 250px 250px; 
+            }
+            .card {
+                width: 240px;
+                height: 350px;
+                margin: 1rem 0rem;
+                
+            }
+
+            .image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
 
         }
+        @media (max-width: 530px) {
+            .movie-list {
+                grid-template-columns: 200px 200px;
+               
+            }
+            .card {
+                width: 180px;
+                height: 260px;
+                margin: 1rem 0rem;
+                
+            }
+
+            .image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        }
+
+        @media (max-width: 425px) {
+            .movie-list {
+                grid-template-columns: 180px 180px;
+               
+            }
+            .card {
+                width: 165px;
+                height: 235px;
+                margin: 1rem 0rem;
+                
+            }
+
+            .image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        }
+
+        
         
         .movie-list-item {
             text-wrap: no-wrap;
@@ -165,7 +220,7 @@ export interface ScrollState {
                     </div>     
                 }
             </div>
-            @if (movieService.loading() && !movieService.error()) {  
+            @if (movieService.loading()) {  
                 <div class="loader"></div>
             } 
             <!-- <div >

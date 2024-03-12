@@ -95,11 +95,16 @@ import { NetworkConnectionService } from './shared/utils/network-connection.serv
           </div>
           @if (!movieService.formFocus()) {
             <ul class="nav-items category">
+              <!-- @if (movieService.movieDetail().length >  0) {
+                <li class="selection">
+                  <h1>{{ movieService.movieDetail()[0].title }}</h1>
+                </li>
+              }  -->
               @if (movieService.state().genre === null) {
                 <li class="selection">
                    <h1>{{ movieService.selection() }}</h1>
                 </li>
-              } @else {
+              }  @else {
                 <li class="selection">
                    <h1>{{ movieService.genre() }}</h1>
                 </li>
@@ -109,7 +114,7 @@ import { NetworkConnectionService } from './shared/utils/network-connection.serv
     </div>
   
     <mat-drawer-container hasBackdrop="true"  (backdropClick)="close()">
-      <mat-drawer id="drawer" #drawer mode="push">
+      <mat-drawer stopPropagation id="drawer" #drawer mode="push">
         <ul class="nav-items-drawer">
           <li>
             <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop}); drawer.toggle()">Home</a>
@@ -345,13 +350,15 @@ export class AppComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('searchbar') searchbar!: ElementRef;
 
+  params = toSignal(this.activatedRoute.paramMap);
+
+  paramId = computed(() => this.params()?.get('id'));
 
   stateCtrl = new FormControl('');
   filteredStates!: Observable<any[]>;
 
   panelOpenState: boolean = false;
-  url: string = ''
-  onlineMessage: string = '';
+  
   constructor() {
     this.networkService.checkConnection$.pipe(takeUntilDestroyed(), tap((status) => console.log('Network status: ', status))).subscribe((online) => {
       this.networkService.state.update((state) => ({
@@ -386,16 +393,16 @@ export class AppComponent {
 
   searchText = '';
 
-  // toggleSearch: boolean = false;
+  toggleSearch: boolean = false;
 
-  // openSearch() {
-  //   this.toggleSearch = true;
-  //   this.searchbar.nativeElement.focus();
-  // }
-  // searchClose() {
-  //   this.searchText = '';
-  //   this.toggleSearch = false;
-  // }
+  openSearch() {
+    this.toggleSearch = true;
+    this.searchbar.nativeElement.focus();
+  }
+  searchClose() {
+    this.searchText = '';
+    this.toggleSearch = false;
+  }
 
   openDrawer() {
     document.body.classList.add('no-scroll');
@@ -404,5 +411,7 @@ export class AppComponent {
   closeDrawer() {
     document.body.classList.remove('no-scroll');
   }
+
+
 
 }
