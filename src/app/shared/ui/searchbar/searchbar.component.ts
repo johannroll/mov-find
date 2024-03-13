@@ -27,7 +27,7 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
             >
             @if (movieService.formFocus()) {
                 <button matSuffix mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
-                    @if (!movieService.searchLoading()) {
+                    @if (!movieService.searchLoading() && movieService.formFocus()) {
                         <mat-icon>close</mat-icon>
                     }
                 </button>
