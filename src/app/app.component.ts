@@ -52,7 +52,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
 
     <div class="toolbar">
       
-        <button class="menu-button" mat-icon-button (click)="drawer.toggle()">
+        <button class="menu-button" mat-icon-button (click)="drawer.toggle(); drawerToggle()">
           <mat-icon>menu</mat-icon>
         </button>
      
@@ -119,7 +119,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
           }
     </div>
   
-    <mat-drawer-container hasBackdrop="true" class="full-height" (backdropClick)="close()">
+    <mat-drawer-container hasBackdrop="true"  [class.full-height]="drawerOpen === true" (backdropClick)="close()">
       <mat-drawer stopPropagation id="drawer" #drawer mode="push">
         <ul class="nav-items-drawer">
           <li>
@@ -138,7 +138,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
                   </mat-panel-description>
                 </mat-expansion-panel-header>
                   @for(item of movieService.movielist(); track $index) {
-                    <button routerLink="/home" (click)="movieService.movielist$.next(item); drawer.toggle()"  mat-menu-item>{{ movieService.formatString(item) }}</button>
+                    <button routerLink="/home" (click)="movieService.movielist$.next(item); drawer.toggle(); drawerToggle()"  mat-menu-item>{{ movieService.formatString(item) }}</button>
                   }
               </mat-expansion-panel>
               <mat-expansion-panel class="mat-elevation-z0" (opened)="panelOpenState = true"
@@ -152,7 +152,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
                   </mat-panel-description>
                 </mat-expansion-panel-header>
                   @for(genre of movieService.genres(); track genre.id) {
-                  <button routerLink="/home" (click)="movieService.genre$.next(genre); drawer.toggle()" mat-menu-item>{{ genre.name }}</button>
+                  <button routerLink="/home" (click)="movieService.genre$.next(genre); drawer.toggle(); drawerToggle()" mat-menu-item>{{ genre.name }}</button>
                   }
               </mat-expansion-panel>
             </mat-accordion>
@@ -368,6 +368,7 @@ export class AppComponent {
   filteredStates!: Observable<any[]>;
 
   panelOpenState: boolean = false;
+  drawerOpen: boolean = false;
   
   constructor() {
     this.networkService.checkConnection$.pipe(takeUntilDestroyed(), tap((status) => console.log('Network status: ', status))).subscribe((online) => {
@@ -388,7 +389,6 @@ export class AppComponent {
         this.snackbarService.displayError(error);
       }
       
-      
     effect(() => {
       const network = this.networkService.isOnline();
       
@@ -403,33 +403,14 @@ export class AppComponent {
     })
 
   }
+
+  drawerToggle() {
+    this.drawerOpen = !this.drawerOpen;
+  }
   
     
   close() {
     this.sidenav.close();
   }
-
-  searchText = '';
-
-  // toggleSearch: boolean = false;
-
-  // openSearch() {
-  //   this.toggleSearch = true;
-  //   this.searchbar.nativeElement.focus();
-  // }
-  // searchClose() {
-  //   this.searchText = '';
-  //   this.toggleSearch = false;
-  // }
-
-  openDrawer() {
-    document.body.classList.add('no-scroll');
-  }
-
-  closeDrawer() {
-    document.body.classList.remove('no-scroll');
-  }
-
-
 
 }
