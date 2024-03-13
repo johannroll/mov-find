@@ -304,6 +304,10 @@ private options = {
         .pipe(
             catchError((err) => {
               this.handleError(err)
+              this.state.update((state) => ({
+                ...state,
+                loading: false
+              }))
               return EMPTY}),
             map(( response ) => {
               const movies = response.results
@@ -334,6 +338,10 @@ private options = {
       .pipe(
         catchError((err) => {
           this.handleError(err)
+          this.state.update((state) => ({
+            ...state,
+            loading: false
+          }))
           return EMPTY}),
         map(( response ) => {
           const movies = response.results
@@ -352,6 +360,10 @@ private options = {
       .pipe(
         catchError((err) => {
           this.handleError(err)
+          this.movieDetailState.update((state) => ({
+            ...state,
+            loading: false
+          }))
           return EMPTY}),
         map(( response ) => {
               return response
@@ -408,6 +420,10 @@ private options = {
     .pipe(
       catchError((err) => {
         this.handleError(err)
+        this.actorState.update((state) => ({
+          ...state,
+          loading: false
+        }))
         return EMPTY}),
       map(( response ) => {
             return response
@@ -439,6 +455,10 @@ private options = {
     .pipe(
       catchError((err) => {
         this.handleError(err)
+        this.searchState.update((state) => ({
+          ...state,
+          loading: false
+        }))
         return EMPTY}),
       map(( response ) => {
         const movies = response.results

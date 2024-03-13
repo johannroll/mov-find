@@ -119,7 +119,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
           }
     </div>
   
-    <mat-drawer-container hasBackdrop="true"  (backdropClick)="close()">
+    <mat-drawer-container hasBackdrop="true" class="full-height" (backdropClick)="close()">
       <mat-drawer stopPropagation id="drawer" #drawer mode="push">
         <ul class="nav-items-drawer">
           <li>
@@ -201,7 +201,10 @@ import { RouteNameService } from './shared/utils/route-name.service';
       width: 215px;
       margin-top: 66px;
       padding-top: 1rem;
-      
+    }
+
+    .full-height {
+      height: 100%;
     }
 
     :host ::ng-deep .mat-drawer-shown {
@@ -395,6 +398,7 @@ export class AppComponent {
 
         if (network && this.networkService.state().connectionCount > 1) {
           this.snackbarService.displaySuccess('Connection restored');
+          location.reload();
         }
     })
 
@@ -407,16 +411,16 @@ export class AppComponent {
 
   searchText = '';
 
-  toggleSearch: boolean = false;
+  // toggleSearch: boolean = false;
 
-  openSearch() {
-    this.toggleSearch = true;
-    this.searchbar.nativeElement.focus();
-  }
-  searchClose() {
-    this.searchText = '';
-    this.toggleSearch = false;
-  }
+  // openSearch() {
+  //   this.toggleSearch = true;
+  //   this.searchbar.nativeElement.focus();
+  // }
+  // searchClose() {
+  //   this.searchText = '';
+  //   this.toggleSearch = false;
+  // }
 
   openDrawer() {
     document.body.classList.add('no-scroll');

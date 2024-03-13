@@ -37,18 +37,6 @@ a {
     align-items: center;
 }
 
-.mat-drawer-content {
-  overflow: hidden !important;
-}
-
-.mat-drawer:not(.mat-drawer-side) {
-  position: fixed;
-}
-
-.mat-drawer-backdrop {
-  position: fixed !important;
-}
-
 .loader-container {
     position: fixed;
     height: 100%;
