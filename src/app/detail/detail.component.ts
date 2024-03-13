@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { SnackbarService } from "../Services/SnackbarService/snackbar.service";
 import { WatchlistService } from "../watchlist/data-access/watchlist.service";
+import { RouteNameService } from "../shared/utils/route-name.service";
 
 
 
@@ -409,6 +410,7 @@ export default class DetailComponent {
     movieService = inject(MoviesService)
     snackbarService = inject(SnackbarService)
     watchlistService = inject(WatchlistService)
+    routeNameService = inject(RouteNameService)
 
     params = toSignal(this.route.paramMap);
     back = signal(this.location);
@@ -422,12 +424,13 @@ export default class DetailComponent {
    country = signal<any>(null);
    type = signal<any>(null);
 
-
    ngAfterViewInit() {
        window.scrollTo(0, 0);
        if (this.params()?.get('id') !== null) {
            this.movieService.movieDetailId$.next(Number(this.params()?.get('id')))
        }
+
+
    }
 
     countrySelected(selection: any) {

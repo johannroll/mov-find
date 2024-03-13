@@ -6,4 +6,9 @@ export interface TmdbResponse {
     total_results: number;
     results: Movie[];
   }
+
+  export type WatchProviderResponse = {
+    id: number;
+    results: any;
+  }
   

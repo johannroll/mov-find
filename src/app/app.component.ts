@@ -123,7 +123,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
       <mat-drawer stopPropagation id="drawer" #drawer mode="push">
         <ul class="nav-items-drawer">
           <li>
-            <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop}); drawer.toggle()">Home</a>
+            <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop}); drawer.toggle(); drawerToggle()">Home</a>
           </li>  
           <li>
             <mat-accordion>
@@ -158,7 +158,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
             </mat-accordion>
           </li>
           <li class="watchlist">
-              <button (click)="drawer.toggle()"  routerLink="/watchlist" mat-button>
+              <button (click)="drawer.toggle(); drawerToggle()"  routerLink="/watchlist" mat-button>
                   Watchlist
                   <mat-icon>favorite</mat-icon>
               </button>
@@ -184,8 +184,6 @@ import { RouteNameService } from './shared/utils/route-name.service';
       height: 60px;
       box-shadow: 0px 3px 30px 3px rgb(230,230,230,0.2);
       background: rgb(58,58,58);
-      /* background: rgb(58,58,58, 0.8);
-       backdrop-filter: blur(12px); */
     }
 
     .searchbar-wrapper {
@@ -218,9 +216,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
       align-items: flex-start;
     }
 
-
     .nav-items {
-     
       display: flex;
       align-items: center;
       padding: 5px 0px 5px 0px;
@@ -245,7 +241,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
     
     .nav-items li {
       margin-right: 15px;
-    }
+    } 
 
     .nav-items-drawer li {
       margin-bottom: 7px;
@@ -379,8 +375,6 @@ export class AppComponent {
       }))
     })
 
-    console.log(this.routeService.currentRoute());
-
     effect(() => {
       });
       const error = this.movieService.error();
@@ -408,7 +402,6 @@ export class AppComponent {
     this.drawerOpen = !this.drawerOpen;
   }
   
-    
   close() {
     this.sidenav.close();
   }

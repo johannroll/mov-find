@@ -4,7 +4,7 @@ import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { EMPTY, Observable, Subject, forkJoin } from "rxjs";
 import { catchError, concatMap, debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
 import { Movie } from "../../shared/interfaces/movie";
-import { TmdbResponse } from "../../shared/interfaces/tmdbResponse";
+import { TmdbResponse, WatchProviderResponse } from "../../shared/interfaces/tmdbResponse";
 import { Genre } from "../../shared/interfaces/genre";
 import { GenresResponse } from "../../shared/interfaces/genreResponse";
 import { FormControl } from "@angular/forms";
@@ -388,7 +388,7 @@ private options = {
 
   private fetchMovieWatchProviders(movieId: number | undefined | null) {
     return this.http
-      .get(`https://api.themoviedb.org/3/movie/${movieId}/watch/providers`, this.options)
+      .get<WatchProviderResponse>(`https://api.themoviedb.org/3/movie/${movieId}/watch/providers`, this.options)
       .pipe(
         catchError((err) => {
           this.handleError(err)
