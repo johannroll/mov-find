@@ -1,11 +1,11 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, RouterOutlet, Router, RouterLink, ActivatedRouteSnapshot } from '@angular/router';
+import { Component, ElementRef, ViewChild, computed, effect, inject } from '@angular/core';
+import { ActivatedRoute, RouterOutlet, Router, RouterLink } from '@angular/router';
 import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Observable, Observer, fromEvent, map, merge, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,8 +20,8 @@ import { MatTabsModule } from '@angular/material/tabs'
 import { StorageService } from './Services/StorageService/storage.service';
 import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
 import { SnackbarService } from './Services/SnackbarService/snackbar.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NetworkConnectionService } from './shared/utils/network-connection.service';
+import { RouteNameService } from './shared/utils/route-name.service';
 
 
 @Component({
@@ -100,14 +100,20 @@ import { NetworkConnectionService } from './shared/utils/network-connection.serv
                   <h1>{{ movieService.movieDetail()[0].title }}</h1>
                 </li>
               }  -->
-              @if (movieService.state().genre === null) {
+              @if (routeService.currentRoute() === 'detail' || routeService.currentRoute() === 'actor') {
                 <li class="selection">
-                   <h1>{{ movieService.selection() }}</h1>
+                   <h3>{{ movieService.movieDetail()[0]?.title }}</h3>
                 </li>
-              }  @else {
-                <li class="selection">
-                   <h1>{{ movieService.genre() }}</h1>
-                </li>
+              } @else {
+                @if (movieService.state().genre === null) {
+                  <li class="selection">
+                     <h1>{{ movieService.selection() }}</h1>
+                  </li>
+                }  @else {
+                  <li class="selection">
+                     <h1>{{ movieService.genre() }}</h1>
+                  </li>
+                }
               }
             </ul>
           }
@@ -346,6 +352,7 @@ export class AppComponent {
   snackbarService = inject(SnackbarService)
   activatedRoute = inject(ActivatedRoute)
   networkService = inject(NetworkConnectionService)
+  routeService = inject(RouteNameService)
   router = inject(Router)
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('searchbar') searchbar!: ElementRef;
@@ -363,9 +370,12 @@ export class AppComponent {
     this.networkService.checkConnection$.pipe(takeUntilDestroyed(), tap((status) => console.log('Network status: ', status))).subscribe((online) => {
       this.networkService.state.update((state) => ({
           ...state,
-          online: online
+          online: online,
+          connectionCount: state.connectionCount + 1
       }))
     })
+
+    console.log(this.routeService.currentRoute());
 
     effect(() => {
       });
@@ -376,13 +386,17 @@ export class AppComponent {
       }
       
       
-      effect(() => {
-        const network = this.networkService.isOnline();
-        
-          if (!network) {
-            this.snackbarService.displayError('No internet connection');
-          }
-      })
+    effect(() => {
+      const network = this.networkService.isOnline();
+      
+        if (!network) {
+          this.snackbarService.displayError('No internet connection');
+        }
+
+        if (network && this.networkService.state().connectionCount > 1) {
+          this.snackbarService.displaySuccess('Connection restored');
+        }
+    })
 
   }
   

@@ -16,7 +16,7 @@ export class SnackbarService {
     displaySnackbarMessage(message: string, movieId: string) {
         let snackbarRef = this.snackbar.open(message, 'Undo', { 
             duration: 3000,
-            panelClass: ['custom-snackbar', 'snackbar-success'], 
+            panelClass: ['custom-snackbar', 'snackbar-error'], 
         });
 
         snackbarRef.onAction().subscribe(() => {
@@ -24,8 +24,18 @@ export class SnackbarService {
         });
     }
 
+    displaySuccess(message: string) {
+        this.snackbar.open(message, '', { 
+            duration: 3000,
+            panelClass: ['custom-snackbar', 'snackbar-success'], 
+        });
+    }
+
     displayError(error: string) {
-        this.snackbar.open(error, 'Dismiss', {  duration: 3000});
+        this.snackbar.open(error, '', {  
+            duration: 3000,
+            panelClass: ['custom-snackbar', 'snackbar-error'], 
+        });
     }
 
     private handleUndoAction(movieId: string) {

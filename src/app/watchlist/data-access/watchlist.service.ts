@@ -1,7 +1,7 @@
 import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { StorageService } from "../../Services/StorageService/storage.service";
 import { Movie, RemoveMovie } from "../../shared/interfaces/movie";
-import { Subject, map } from "rxjs";
+import { Subject, map, tap } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 
@@ -23,7 +23,12 @@ export class WatchlistService {
         error: null
     })
 
-    private watchlistItemsLoaded$ = this.storageService.loadWatchlist();
+    private watchlistItemsLoaded$ = this.storageService.loadWatchlist().pipe(
+        tap((watchlist) => this.state.update((state) => ({
+            ...state,
+            loaded: false
+        })))
+    );
 
     watchlistItems = computed(() => this.state().watchlistItems);
     loaded = computed(() => this.state().loaded);

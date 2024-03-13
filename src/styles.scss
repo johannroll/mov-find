@@ -107,8 +107,12 @@ a {
   color: azure !important;
 } 
 
-.mdc-snackbar__surface {
+.snackbar-error .mdc-snackbar__surface {
     background-color: #f83131 !important;
+}
+
+.snackbar-success .mdc-snackbar__surface {
+    background-color: #36b822 !important;
 }
 
 .mdc-snackbar__label {

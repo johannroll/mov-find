@@ -1,10 +1,9 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-
-import { BehaviorSubject, Subject, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 
 export interface NetworkStatusState {
     online: boolean;
+    connectionCount: number;
 }
 
 @Injectable({
@@ -14,25 +13,28 @@ export interface NetworkStatusState {
 export class NetworkConnectionService {
     
 state = signal<NetworkStatusState>({
-    online: true
+    online: true,
+    connectionCount: 0
 })
 
 
 isOnline = computed(() => this.state().online);
+connectionCount = computed(() => this.state().connectionCount)
 
 private networkStatus = new BehaviorSubject<boolean>(navigator.onLine);
 checkConnection$ = this.networkStatus.pipe(
 map((status) => status))
 
 constructor() {
-window.addEventListener('online', this.updateNetworkStatus.bind(this));
-window.addEventListener('offline', this.updateNetworkStatus.bind(this));
+    window.addEventListener('online', this.updateNetworkStatus.bind(this));
+    window.addEventListener('offline', this.updateNetworkStatus.bind(this));
 
 }
 
-private updateNetworkStatus() {
-this.networkStatus.next(navigator.onLine);
-}
+    private updateNetworkStatus() {
+        this.networkStatus.next(navigator.onLine)
+    }
+
 
 
 }

@@ -330,7 +330,7 @@ private options = {
 
   private fetchMoviesByGenre(genreId: string, page: number) {
     return this.http
-      .get<TmdbResponse>(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=true&language=en-US&page=${page + 111234}&sort_by=popularity.desc&with_genres=${genreId}`, this.options)
+      .get<TmdbResponse>(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=true&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${genreId}`, this.options)
       .pipe(
         catchError((err) => {
           this.handleError(err)

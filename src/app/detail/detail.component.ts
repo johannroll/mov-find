@@ -359,15 +359,21 @@ import { WatchlistService } from "../watchlist/data-access/watchlist.service";
                 <div class="video-container">
                 @if (!movieService.movieDetailState().loading) {  
                     @if(movieService.movieDetail()[2].results.length > 0) {
-                        @if (movieService.movieDetail()[2].results.length > 2) {
+                        @if (movieService.movieDetail()[2].results.length > 2 && movieService.movieDetail()[2].results[movieService.movieDetail()[2]?.results.length - 1].name === 'Official Trailer') {
+                            <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[movieService.movieDetail()[2]?.results.length - 1]?.key"
+                                width="450"
+                                height="250"
+                                suggestedQuality="hd1080"> 
+                            </youtube-player>
+                        } @else if (movieService.movieDetail()[2].results.length > 2) {
                             <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[movieService.movieDetail()[2]?.results.length - 2]?.key"
-                                width="500"
+                                width="450"
                                 height="250"
                                 suggestedQuality="hd1080"> 
                             </youtube-player>
                         } @else if (movieService.movieDetail()[2].results.length <= 2) {
                             <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[0]?.key"
-                                width="500"
+                                width="450"
                                 height="250"
                                 suggestedQuality="hd1080"> 
                             </youtube-player>

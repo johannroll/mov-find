@@ -26,11 +26,11 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                 (blur)="setFocusState(false)"
             >
             @if (this.movieService.formFocus()) {
-                @if (movieService.searchLoading()) {
-                    <button mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()"></button>
-                    
-               
-                }
+                <button matSuffix mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
+                    @if (!movieService.searchLoading()) {
+                        <mat-icon>close</mat-icon>
+                    }
+                </button>
             } @if (!this.movieService.formFocus() && !movieService.searchLoading()) {
                 <div class="search__icon-container">
                     <label for="searchInput" class="search__label" aria-label="Search">
@@ -59,11 +59,11 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                 </mat-option>
                 }
             </mat-autocomplete>
-            @if (this.movieService.formFocus() && !movieService.searchLoading()) {
+            <!-- @if (this.movieService.formFocus() && !movieService.searchLoading()) {
                 <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event);  searchResults = []">
                     <mat-icon>close</mat-icon>
                 </button>
-            }
+            } -->
         </form>
         
     `,
