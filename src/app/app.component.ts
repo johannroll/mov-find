@@ -51,15 +51,11 @@ import { RouteNameService } from './shared/utils/route-name.service';
   template: `
 
     <div class="toolbar">
-      
-        <button class="menu-button" mat-icon-button (click)="drawer.toggle(); drawerToggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-     
-       
-        <!-- <button mat-icon-button (click)="openSearch()">
-          <mat-icon>search</mat-icon>
-        </button> -->
+        @if (!movieService.formFocus()) {
+          <button class="menu-button" mat-icon-button (click)="drawer.toggle(); drawerToggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
+        }
      
         <ul class="nav-items hide">
             <li>
@@ -92,14 +88,12 @@ import { RouteNameService } from './shared/utils/route-name.service';
             [searchFormControl]="movieService.searchFormControl"
             [searchResults]="movieService.searchResults()"
             ></app-searchbar>
+            @if (movieService.formFocus()) {
+                <button class="close-searchbar" [class.hide-cnacel-btn]="!movieService.formFocus()" mat-button (click)="updateFormFocusState()">cancel</button>
+            }
           </div>
           @if (!movieService.formFocus()) {
             <ul class="nav-items category">
-              <!-- @if (movieService.movieDetail().length >  0) {
-                <li class="selection">
-                  <h1>{{ movieService.movieDetail()[0].title }}</h1>
-                </li>
-              }  -->
               @if (routeService.currentRoute() === 'detail' || routeService.currentRoute() === 'actor') {
                 <li class="selection">
                    <h3>{{ movieService.movieDetail()[0]?.title }}</h3>
@@ -119,7 +113,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
           }
     </div>
   
-    <mat-drawer-container hasBackdrop="true"  [class.full-height]="drawerOpen === true" (backdropClick)="close()">
+    <mat-drawer-container hasBackdrop="true"  [class.full-height]="drawerOpen === true" (backdropClick)="close(); drawerToggle()">
       <mat-drawer stopPropagation id="drawer" #drawer mode="push">
         <ul class="nav-items-drawer">
           <li>
@@ -187,7 +181,10 @@ import { RouteNameService } from './shared/utils/route-name.service';
     }
 
     .searchbar-wrapper {
+      display: flex;
+      align-items: center;
       margin-right: auto;
+
     }
 
     .search-menu {
@@ -280,6 +277,10 @@ import { RouteNameService } from './shared/utils/route-name.service';
 
   .btn-back:hover {
       transform: scale(1.05);
+  }
+
+  .hide-cancel-btn {
+    display: none;
   }
 
   ::ng-deep .genre-menu { 
@@ -404,6 +405,10 @@ export class AppComponent {
   
   close() {
     this.sidenav.close();
+  }
+
+  updateFormFocusState() {
+    this.movieService.searchState.update((state) => ({...state, formFocus: false }));
   }
 
 }
