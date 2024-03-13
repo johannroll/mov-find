@@ -25,9 +25,9 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                 (focus)="setFocusState(true)" 
                 (blur)="setFocusState(false)"
             >
-            @if (this.movieService.formFocus()) {
+            @if (movieService.formFocus()) {
                 <button matSuffix mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
-                    @if (!movieService.searchLoading() && movieService.formFocus()) {
+                    @if (!movieService.searchLoading()) {
                         <mat-icon>close</mat-icon>
                     }
                 </button>
@@ -120,7 +120,7 @@ export class SearchbarComponent {
                   ...state,
                     formFocus: false,
                 }))
-                // this.autocompleteTrigger.closePanel();
+                this.autocompleteTrigger.closePanel();
             }
         }, 1);
         
