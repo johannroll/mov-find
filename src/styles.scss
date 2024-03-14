@@ -67,6 +67,16 @@ a {
   }
   @keyframes l7 {to{transform: rotate(.5turn)}}
 
+.mat-icon-button {
+  transition: none !important; /* Optional: Removes transition effects */
+}
+
+.mat-mdc-icon-button:hover .mat-mdc-button-persistent-ripple::before {
+  opacity: 1;
+  background-color: transparent;
+}
+
+
 .btn-back {
     position: fixed !important;
     top: 78px;

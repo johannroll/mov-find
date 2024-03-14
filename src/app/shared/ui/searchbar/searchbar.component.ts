@@ -27,7 +27,7 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                     (blur)="setFocusState(false)"
                 >
                 @if (movieService.formFocus()) {
-                    <button matSuffix disableRipple mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
+                    <button disableRipple="true" mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" class="custom-mat-icon-button" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
                         @if (!movieService.searchLoading() && movieService.formFocus() && searchFormControl.value.length > 0 &&  searchFormControl.value !== '') {
                             <mat-icon>close</mat-icon>
                         }
@@ -89,6 +89,11 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
             margin-left: 15px;
         }
 
+        .custom-mat-icon-button:hover {
+            background-color: transparent !important;
+            opacity: 1 !important;
+        }
+
        
 
     `]
@@ -104,7 +109,8 @@ export class SearchbarComponent {
 
     clearSearch(event: MouseEvent) {
     event.stopPropagation(); // Stop click event from propagating
-    this.searchFormControl.setValue(''); // Clear the search form control
+    this.searchFormControl.setValue('');
+    this.setFocusState(true) // Clear the search form control
     event.preventDefault(); // Prevent any default action
     setTimeout(() => {
         // Use a timeout to delay refocusing, allowing any other related events to process first.
