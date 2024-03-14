@@ -8,7 +8,6 @@ import { MatDrawer, MatDrawerToggleResult } from "@angular/material/sidenav";
 
 export class SearchFocusService {
     movieService = inject(MoviesService)
-    doCument = inject(Document)
     constructor() {
         this.listenToFocusEvents();
       }
@@ -27,11 +26,6 @@ export class SearchFocusService {
             ...state,
             formFocus: true
          }))
-        //  const drawer : MatDrawer = this.document.querySelector('#drawer');
-        //  if (drawer !== null) {
-        //      drawer.close();
-        //  }
-
         }
       };
 
