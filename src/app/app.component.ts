@@ -410,6 +410,12 @@ export class AppComponent {
         location.reload();
       }
     })
+
+    effect(() => {
+      if (this.movieService.formFocus()) {
+        this.drawer.close()
+      }
+    })
     
   }
   
