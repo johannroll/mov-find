@@ -1,5 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { MoviesService } from "../../Services/MoviesService/movies.service";
+import { MatDrawer, MatDrawerToggleResult } from "@angular/material/sidenav";
 
 @Injectable({
     providedIn: 'root'
@@ -7,6 +8,7 @@ import { MoviesService } from "../../Services/MoviesService/movies.service";
 
 export class SearchFocusService {
     movieService = inject(MoviesService)
+    document = inject(Document)
     constructor() {
         this.listenToFocusEvents();
       }
@@ -25,6 +27,10 @@ export class SearchFocusService {
             ...state,
             formFocus: true
          }))
+        //  const drawer : MatDrawer = this.document.querySelector('#drawer');
+        //  if (drawer !== null) {
+        //      drawer.close();
+        //  }
 
         }
       };

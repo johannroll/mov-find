@@ -66,12 +66,6 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
         
     `,
     styles: [`
-        .searchbar-container {
-            display: flex;
-            align-items: center;
-            justify-items: space-evenly;
-        }
-
         .search-image {
             object-fit: cover;
             border-radius: 4px;
@@ -93,9 +87,6 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
             background-color: transparent !important;
             opacity: 1 !important;
         }
-
-       
-
     `]
 })
 

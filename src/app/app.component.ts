@@ -192,7 +192,7 @@ import { SearchFocusService } from './shared/utils/search-focus.service';
     .searchbar-open {
       width: 100%;
       justify-content: space-evenly;
-      margin: auto;
+      margin-right: auto;
       
     }
 
@@ -365,6 +365,7 @@ export class AppComponent {
   router = inject(Router)
   searchFocusService = inject(SearchFocusService)
   @ViewChild('drawer') drawer!: MatDrawer;
+  @ViewChild('drawer') drawerElement!: ElementRef;
   @ViewChild('searchbar') searchbar!: ElementRef;
 
   params = toSignal(this.activatedRoute.paramMap);
@@ -416,6 +417,7 @@ export class AppComponent {
     this.drawer.openedChange.pipe(takeUntil(this.destroy$)).subscribe((isOpen) => {
       console.log('Drawer state changed. Is open:', isOpen);
       this.movieService.setDrawerState(isOpen);
+      // this.searchFocusService.useElement(this.drawerElement.nativeElement);
     });
   };
 
