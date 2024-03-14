@@ -8,7 +8,7 @@ import { MatDrawer, MatDrawerToggleResult } from "@angular/material/sidenav";
 
 export class SearchFocusService {
     movieService = inject(MoviesService)
-    document = inject(Document)
+    doCument = inject(Document)
     constructor() {
         this.listenToFocusEvents();
       }
