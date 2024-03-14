@@ -42,6 +42,10 @@ export interface ScrollState {
   scrollTo: number;
 }
 
+export interface DrawerState {
+  open: boolean;
+}
+
 
 @Injectable({
     providedIn: 'root',
@@ -51,7 +55,13 @@ export interface ScrollState {
 export class MoviesService {
 router = inject(Router)
 snackbarService = inject(SnackbarService)
-currentRoute = computed(() => this.router.url);  
+currentRoute = computed(() => this.router.url);
+
+// initial drawer state
+drawerState = signal<DrawerState>({
+  open: false
+})
+
   // initial scroll state
 scrollToTop : number = 0;
 scrollState = signal<ScrollState>({
@@ -121,6 +131,7 @@ private options = {
   searchResults = computed(() => this.searchState().results);
   searchLoading = computed(() => this.searchState().loading);
   formFocus = computed(() => this.searchState().formFocus);
+  drawerOpen = computed(() => this.drawerState().open)
   
   //source
   genres$ = this.getGenres();
@@ -490,5 +501,13 @@ private options = {
     if (err) {
       this.movielist$.next('now_playing')
     }
+  }
+
+  setDrawerState(booleanValue: boolean) {
+    this.drawerState.update((state) => ({
+      ...state,
+      open: booleanValue
+    }))
+    console.log(this.drawerOpen());
   }
 }

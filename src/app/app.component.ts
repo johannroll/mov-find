@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatMenuModule } from '@angular/material/menu'
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Observable, tap } from 'rxjs';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { MatDrawer, MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOption } from '@angular/material/core';
@@ -22,6 +22,7 @@ import { SearchbarComponent } from './shared/ui/searchbar/searchbar.component';
 import { SnackbarService } from './Services/SnackbarService/snackbar.service';
 import { NetworkConnectionService } from './shared/utils/network-connection.service';
 import { RouteNameService } from './shared/utils/route-name.service';
+import { SearchFocusService } from './shared/utils/search-focus.service';
 
 
 @Component({
@@ -52,7 +53,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
 
     <div class="toolbar">
         @if (!movieService.formFocus()) {
-          <button class="menu-button" mat-icon-button (click)="drawer.toggle(); drawerToggle()">
+          <button class="menu-button" mat-icon-button (click)="drawer.toggle()">
             <mat-icon>menu</mat-icon>
           </button>
         }
@@ -114,11 +115,11 @@ import { RouteNameService } from './shared/utils/route-name.service';
           }
     </div>
   
-    <mat-drawer-container hasBackdrop="true"  [class.full-height]="drawerOpen === true" (backdropClick)="close(); drawerToggle()">
+    <mat-drawer-container hasBackdrop="true"  [class.full-height]="movieService.drawerOpen() === true" (backdropClick)="close()">
       <mat-drawer stopPropagation id="drawer" #drawer mode="push">
         <ul class="nav-items-drawer">
           <li>
-            <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop}); drawer.toggle(); drawerToggle()">Home</a>
+            <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop}); drawer.toggle()">Home</a>
           </li>  
           <li>
             <mat-accordion>
@@ -133,7 +134,7 @@ import { RouteNameService } from './shared/utils/route-name.service';
                   </mat-panel-description>
                 </mat-expansion-panel-header>
                   @for(item of movieService.movielist(); track $index) {
-                    <button routerLink="/home" (click)="movieService.movielist$.next(item); drawer.toggle(); drawerToggle()"  mat-menu-item>{{ movieService.formatString(item) }}</button>
+                    <button routerLink="/home" (click)="movieService.movielist$.next(item); drawer.toggle()"  mat-menu-item>{{ movieService.formatString(item) }}</button>
                   }
               </mat-expansion-panel>
               <mat-expansion-panel class="mat-elevation-z0" (opened)="panelOpenState = true"
@@ -147,13 +148,13 @@ import { RouteNameService } from './shared/utils/route-name.service';
                   </mat-panel-description>
                 </mat-expansion-panel-header>
                   @for(genre of movieService.genres(); track genre.id) {
-                  <button routerLink="/home" (click)="movieService.genre$.next(genre); drawer.toggle(); drawerToggle()" mat-menu-item>{{ genre.name }}</button>
+                  <button routerLink="/home" (click)="movieService.genre$.next(genre); drawer.toggle()" mat-menu-item>{{ genre.name }}</button>
                   }
               </mat-expansion-panel>
             </mat-accordion>
           </li>
           <li class="watchlist">
-              <button (click)="drawer.toggle(); drawerToggle()"  routerLink="/watchlist" mat-button>
+              <button (click)="drawer.toggle()"  routerLink="/watchlist" mat-button>
                   Watchlist
                   <mat-icon>favorite</mat-icon>
               </button>
@@ -362,7 +363,8 @@ export class AppComponent {
   networkService = inject(NetworkConnectionService)
   routeService = inject(RouteNameService)
   router = inject(Router)
-  @ViewChild('sidenav') sidenav!: MatSidenav;
+  searchFocusService = inject(SearchFocusService)
+  @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild('searchbar') searchbar!: ElementRef;
 
   params = toSignal(this.activatedRoute.paramMap);
@@ -371,6 +373,8 @@ export class AppComponent {
 
   stateCtrl = new FormControl('');
   filteredStates!: Observable<any[]>;
+  private destroy$ = new Subject<void>();
+
 
   panelOpenState: boolean = false;
   drawerOpen: boolean = false;
@@ -384,36 +388,44 @@ export class AppComponent {
       }))
     })
 
+    
     effect(() => {
-      });
-      const error = this.movieService.error();
-      
-      if (error != null) {
-        this.snackbarService.displayError(error);
-      }
-      
+    });
+    const error = this.movieService.error();
+    
+    if (error != null) {
+      this.snackbarService.displayError(error);
+    }
+    
     effect(() => {
       const network = this.networkService.isOnline();
       
-        if (!network) {
-          this.snackbarService.displayError('No internet connection');
-        }
-
-        if (network && this.networkService.state().connectionCount > 1) {
-          this.snackbarService.displaySuccess('Connection restored');
-          location.reload();
-        }
+      if (!network) {
+        this.snackbarService.displayError('No internet connection');
+      }
+      
+      if (network && this.networkService.state().connectionCount > 1) {
+        this.snackbarService.displaySuccess('Connection restored');
+        location.reload();
+      }
     })
-
+    
   }
+  
+  ngAfterViewInit() {
+    this.drawer.openedChange.pipe(takeUntil(this.destroy$)).subscribe((isOpen) => {
+      console.log('Drawer state changed. Is open:', isOpen);
+      this.movieService.setDrawerState(isOpen);
+    });
+  };
 
-  drawerToggle() {
-    this.drawerOpen = !this.drawerOpen;
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   
   close() {
-    this.sidenav.close();
-    this.drawerOpen = false;
+    this.drawer.close();
   }
 
   updateFormFocusState() {

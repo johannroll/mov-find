@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -18,17 +18,17 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
        
              <form class="search">
                 <input
+                    #searchInput
                     [formControl]="searchFormControl"
                     [matAutocomplete]="auto"
                     class="search__input" type="text"
                     placeholder="Search" id="searchInput"
                     [(ngModel)]="searchFormControl.value === null ? '' : searchFormControl.value"
-                    (focus)="setFocusState(true)"
-                    (blur)="setFocusState(false)"
+                   
                 >
                 @if (movieService.formFocus()) {
-                    <button disableRipple="true" mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" class="custom-mat-icon-button" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
-                        @if (!movieService.searchLoading() && movieService.formFocus() && searchFormControl.value.length > 0 &&  searchFormControl.value !== '') {
+                    <button disableRipple="true" mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" class="custom-mat-icon-button" [disabled]="movieService.searchLoading()" (pointerdown)="clearSearch($event); searchResults = []">
+                        @if (!movieService.searchLoading()) {
                             <mat-icon>close</mat-icon>
                         }
                     </button>
@@ -41,7 +41,7 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                 }
                 <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
                     @for (movie of searchResults; track $index) {
-                    <mat-option [routerLink]="['detail', movie.id]" (click)="this.movieService.movieDetailId$.next(+movie.id); setFocusState(true)" [value]="movie.title" >
+                    <mat-option [routerLink]="['detail', movie.id]" (click)="this.movieService.movieDetailId$.next(+movie.id); clearSearch($event)" [value]="movie.title" >
                         <div class="search-item-container">
                             <div>
                                 @if ($index < 4) {
@@ -105,42 +105,36 @@ export class SearchbarComponent {
     @Input({ required: true }) searchResults! : Movie[]
     @Output() closeMenu = new EventEmitter() 
 
+    @ViewChild('searchInput') searchInput!: ElementRef;
     @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
-    clearSearch(event: MouseEvent) {
-    event.stopPropagation(); // Stop click event from propagating
-    this.searchFormControl.setValue('');
-    this.setFocusState(true) // Clear the search form control
-    event.preventDefault(); // Prevent any default action
-    setTimeout(() => {
-        // Use a timeout to delay refocusing, allowing any other related events to process first.
-        const inputElement = document.getElementById('searchInput');
-        inputElement?.focus();
-    }, 1);
+    clearSearch(event: Event) {
+        this.searchFormControl.setValue('');
+        event.preventDefault(); 
+        // setTimeout(() => 
+        //     this.searchInput.nativeElement.focus()
+        // , 1);
     }
 
-
-  setFocusState(focused: boolean): void {
-    console.log(this.movieService.formFocus());
-    // Optionally, add logic to delay resetting the state to handle instant blur-to-focus transitions between inputs
-    if (focused) {
-      this.movieService.searchState.update((state) => ({
-        ...state,
-          formFocus: true
-      }))
-      this.closeMenu.emit();
-    } else {
-      setTimeout(() => {
-          if (!document.activeElement || document.activeElement.tagName === 'BODY') {
-              this.movieService.searchState.update((state) => ({
-                  ...state,
-                    formFocus: false,
-                }))
-                this.autocompleteTrigger.closePanel();
-            }
-        }, 1);
-        
-    }
-  }
+//   setFocusState(focused: boolean): void {
+//     console.log(this.movieService.formFocus());
+//     // Optionally, add logic to delay resetting the state to handle instant blur-to-focus transitions between inputs
+//     if (focused) {
+//       this.movieService.searchState.update((state) => ({
+//         ...state,
+//           formFocus: true
+//       }))
+//       this.closeMenu.emit();
+//     } else {
+//       setTimeout(() => {
+//           if (!document.activeElement || document.activeElement.tagName === 'BODY') {
+//               this.movieService.searchState.update((state) => ({
+//                   ...state,
+//                     formFocus: false,
+//                 }))
+//             }
+//       }, 1);     
+//     }
+//   }
 
 }

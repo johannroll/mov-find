@@ -9,7 +9,7 @@ import { SafePipe } from "../shared/utils/safe.pipe";
 import { KeyValuePipe, Location } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -310,7 +310,7 @@ import { RouteNameService } from "../shared/utils/route-name.service";
                                 @if (country() !== null) {
                                 <mat-form-field color="accent" class="type" appearance="outline">
                                     <mat-label>Provider type</mat-label>
-                                    <mat-select (selectionChange)="type.set(providerTypeSelected($event.value))">
+                                    <mat-select (selectionChange)="type.set(providerTypeSelected($event.value))" (click)="updateFormFocusState()">
                                         @if ((movieService.movieDetail()[3].results | json) === '{}') {
                                             <mat-option>None</mat-option>
                                         }
@@ -412,6 +412,9 @@ export default class DetailComponent {
     watchlistService = inject(WatchlistService)
     routeNameService = inject(RouteNameService)
 
+    @ViewChild(MatSelect) matSelect!: MatSelect;
+
+
     params = toSignal(this.route.paramMap);
     back = signal(this.location);
 
@@ -425,13 +428,24 @@ export default class DetailComponent {
    type = signal<any>(null);
 
    ngAfterViewInit() {
+    this.removeFocus();
        window.scrollTo(0, 0);
        if (this.params()?.get('id') !== null) {
            this.movieService.movieDetailId$.next(Number(this.params()?.get('id')))
        }
-
-
    }
+
+   removeFocus() {
+    // Use the nativeElement blur method to remove focus
+    if (this.matSelect && this.matSelect._elementRef.nativeElement) {
+      this.matSelect._elementRef.nativeElement.blur();
+    }
+  }
+
+  updateFormFocusState() {
+    this.movieService.searchFormControl.setValue('');
+    this.movieService.searchState.update((state) => ({...state, formFocus: false }))
+  }
 
     countrySelected(selection: any) {
        return selection.toString();
