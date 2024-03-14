@@ -83,13 +83,14 @@ import { RouteNameService } from './shared/utils/route-name.service';
                 </button>
             </li>
           </ul>
-          <div class="searchbar-wrapper">
+          <div class="searchbar-wrapper" [class.searchbar-open]="movieService.formFocus()">
             <app-searchbar
             [searchFormControl]="movieService.searchFormControl"
             [searchResults]="movieService.searchResults()"
+            (closeMenu)="drawer.close()"
             ></app-searchbar>
             @if (movieService.formFocus()) {
-                <button class="close-searchbar" [class.hide-cnacel-btn]="!movieService.formFocus()" mat-button (click)="updateFormFocusState()">cancel</button>
+                <button class="close-searchbar" disableRipple [class.hide-cnacel-btn]="!movieService.formFocus()" mat-button (click)="updateFormFocusState()">cancel</button>
             }
           </div>
           @if (!movieService.formFocus()) {
@@ -184,7 +185,14 @@ import { RouteNameService } from './shared/utils/route-name.service';
       display: flex;
       align-items: center;
       margin-right: auto;
-
+      
+    }
+    
+    .searchbar-open {
+      width: 100%;
+      justify-content: space-evenly;
+      margin: auto;
+      
     }
 
     .search-menu {
@@ -405,6 +413,7 @@ export class AppComponent {
   
   close() {
     this.sidenav.close();
+    this.drawerOpen = false;
   }
 
   updateFormFocusState() {

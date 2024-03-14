@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, inject } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -27,8 +27,8 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                     (blur)="setFocusState(false)"
                 >
                 @if (movieService.formFocus()) {
-                    <button matSuffix mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
-                        @if (!movieService.searchLoading() && movieService.formFocus() && searchFormControl.value.length > 0) {
+                    <button matSuffix disableRipple mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" [disabled]="movieService.searchLoading()" (click)="clearSearch($event);  searchResults = []">
+                        @if (!movieService.searchLoading() && movieService.formFocus() && searchFormControl.value.length > 0 &&  searchFormControl.value !== '') {
                             <mat-icon>close</mat-icon>
                         }
                     </button>
@@ -58,7 +58,7 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                             </div>
                         </div>
                     </mat-option>
-                    }
+                    } 
                 </mat-autocomplete>
             </form>
           
@@ -98,6 +98,7 @@ export class SearchbarComponent {
     movieService = inject(MoviesService)
     @Input({ required: true }) searchFormControl!: FormControl
     @Input({ required: true }) searchResults! : Movie[]
+    @Output() closeMenu = new EventEmitter() 
 
     @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
@@ -121,6 +122,7 @@ export class SearchbarComponent {
         ...state,
           formFocus: true
       }))
+      this.closeMenu.emit();
     } else {
       setTimeout(() => {
           if (!document.activeElement || document.activeElement.tagName === 'BODY') {

@@ -239,7 +239,7 @@ a {
 
 .custom-autocomplete {
   width: calc(100%); 
-  margin-left: calc(-46px); 
+  margin-left: calc(0px); 
   border-top: 15px !important;
   border-radius: 5px !important;
   margin-top: 12.15px !important;
@@ -270,6 +270,16 @@ a {
   border: 2px solid azure;
   border-top-color: #4f4f4f;
   animation: spinner .8s linear infinite;
+}
+
+div.mat-mdc-autocomplete-panel {
+  max-height: 580px !important;
+}
+
+@media (max-width: 500px) {
+  .custom-autocomplete{
+    margin-left: calc(-7px); 
+  }
 }
 
 
