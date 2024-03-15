@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, WritableSignal, computed, inject, signal } from "@angular/core";
+import { Component, OnInit, ViewChild, WritableSignal, computed, effect, inject, signal } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { MoviesService } from "../Services/MoviesService/movies.service";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
@@ -362,20 +362,20 @@ import { RouteNameService } from "../shared/utils/route-name.service";
                     @if(movieService.movieDetail()[2].results.length > 0) {
                         @if (movieService.movieDetail()[2].results.length > 2 && movieService.movieDetail()[2].results[movieService.movieDetail()[2]?.results.length - 1].name === 'Official Trailer') {
                             <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[movieService.movieDetail()[2]?.results.length - 1]?.key"
-                                width="450"
-                                height="250"
+                                width="400"
+                                height="200"
                                 suggestedQuality="hd1080"> 
                             </youtube-player>
                         } @else if (movieService.movieDetail()[2].results.length > 2) {
                             <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[movieService.movieDetail()[2]?.results.length - 2]?.key"
-                                width="450"
-                                height="250"
+                                width="400"
+                                height="200"
                                 suggestedQuality="hd1080"> 
                             </youtube-player>
                         } @else if (movieService.movieDetail()[2].results.length <= 2) {
                             <youtube-player id="video-player" [videoId]="movieService.movieDetail()[2]?.results[0]?.key"
-                                width="450"
-                                height="250"
+                                width="400"
+                                height="200"
                                 suggestedQuality="hd1080"> 
                             </youtube-player>
                         } 
@@ -417,12 +417,8 @@ export default class DetailComponent {
 
     params = toSignal(this.route.paramMap);
     back = signal(this.location);
-
-    // moviedetail = computed(() =>  this.movieService.movieDetailId$.next(Number(this.params()?.get('id'))));
     
     movie = computed(() => this.movieService.movieDetail()[0]);
-
-    // movieGenres = computed(() => this.movieService.getMovieGenres(this.movie()?.genre_ids))
 
    country = signal<any>(null);
    type = signal<any>(null);
@@ -435,12 +431,19 @@ export default class DetailComponent {
        }
    }
 
-   removeFocus() {
-    // Use the nativeElement blur method to remove focus
-    if (this.matSelect && this.matSelect._elementRef.nativeElement) {
-      this.matSelect._elementRef.nativeElement.blur();
+   constructor() {
+       if(this.routeNameService.currentRoute() ===  'detail') {
+           this.country.set(null)
+           this.type.set(null)
+       }
+        
     }
-  }
+
+   removeFocus() {
+        if (this.matSelect && this.matSelect._elementRef.nativeElement) {
+        this.matSelect._elementRef.nativeElement.blur();
+        }
+   } 
 
   updateFormFocusState() {
     this.movieService.searchFormControl.setValue('');

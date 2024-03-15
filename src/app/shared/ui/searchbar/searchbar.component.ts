@@ -1,14 +1,16 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, effect, inject } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import {MatAutocompleteModule, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import { Movie } from "../../interfaces/movie";
-import { Router, RouterLink } from "@angular/router";
+import { RouterLink } from "@angular/router";
 import { NgOptimizedImage } from "@angular/common";
 import { MoviesService } from "../../../Services/MoviesService/movies.service";
 import { stopPropagation } from "../../utils/stop-propagation.directive";
-import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { SearchFocusService } from "../../utils/search-focus.service";
+import { RouteNameService } from "../../utils/route-name.service";
 
 @Component({
     standalone: true,
@@ -41,29 +43,28 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
                 }
                 <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
                     @for (movie of searchResults; track $index) {
-                    <mat-option [routerLink]="['detail', movie.id]" (click)="this.movieService.movieDetailId$.next(+movie.id); clearSearch($event)" [value]="movie.title" >
-                        <div class="search-item-container">
-                            <div>
-                                @if ($index < 4) {
-                                    <img class="search-image" priority [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" height="70" width="50">
-                                } @else {
-                                    <img class="search-image" [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" height="70" width="50">
-                                }
+                        <mat-option [routerLink]="['detail', movie.id]" (click)="this.movieService.movieDetailId$.next(+movie.id); clearSearch($event)" [value]="movie.title" >
+                            <div class="search-item-container">
+                                <div>
+                                    @if ($index < 4) {
+                                        <img class="search-image" priority [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" height="70" width="50">
+                                    } @else {
+                                        <img class="search-image" [ngSrc]="movie.poster_path !== null ? 'https://image.tmdb.org/t/p/w300/' + movie.poster_path : 'https://fakeimg.pl/600x750?text=No+image'" height="70" width="50">
+                                    }
+                                </div>
+                                <div>
+                                    <span> {{ movie.title }}</span>
+                                    @if (movie.release_date !== '') {
+                                        <small> ({{movie.release_date.substring(0,4)}})</small>
+                                    }
+                                </div>
                             </div>
-                            <div>
-                                <span> {{ movie.title }}</span>
-                                @if (movie.release_date !== '') {
-                                    <small> ({{movie.release_date.substring(0,4)}})</small>
-                                }
-                            </div>
-                        </div>
-                    </mat-option>
-                    } 
+                        </mat-option>
+                          
+                    }
                 </mat-autocomplete>
             </form>
-          
-       
-        
+              
     `,
     styles: [`
         .search-image {
@@ -90,8 +91,10 @@ import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/p
     `]
 })
 
-export class SearchbarComponent {
+export class SearchbarComponent implements OnInit {
     movieService = inject(MoviesService)
+    searchFocusService = inject(SearchFocusService)
+    routeService = inject(RouteNameService)
     @Input({ required: true }) searchFormControl!: FormControl
     @Input({ required: true }) searchResults! : Movie[]
     @Output() closeMenu = new EventEmitter() 
@@ -99,33 +102,18 @@ export class SearchbarComponent {
     @ViewChild('searchInput') searchInput!: ElementRef;
     @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
+    ngOnInit() {
+        window.addEventListener('blur', this.windowBlurHandler);
+      }
+
     clearSearch(event: Event) {
         this.searchFormControl.setValue('');
         event.preventDefault(); 
-        // setTimeout(() => 
-        //     this.searchInput.nativeElement.focus()
-        // , 1);
     }
 
-//   setFocusState(focused: boolean): void {
-//     console.log(this.movieService.formFocus());
-//     // Optionally, add logic to delay resetting the state to handle instant blur-to-focus transitions between inputs
-//     if (focused) {
-//       this.movieService.searchState.update((state) => ({
-//         ...state,
-//           formFocus: true
-//       }))
-//       this.closeMenu.emit();
-//     } else {
-//       setTimeout(() => {
-//           if (!document.activeElement || document.activeElement.tagName === 'BODY') {
-//               this.movieService.searchState.update((state) => ({
-//                   ...state,
-//                     formFocus: false,
-//                 }))
-//             }
-//       }, 1);     
-//     }
-//   }
-
+    private windowBlurHandler = (): void => {
+        if (this.autocompleteTrigger) {
+          this.autocompleteTrigger.closePanel();
+        }
+      };
 }

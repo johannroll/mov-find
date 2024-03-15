@@ -38,6 +38,10 @@ export class SnackbarService {
         });
     }
 
+    dismissSnackbar() {
+        this.snackbar.dismiss();
+    }
+
     private handleUndoAction(movieId: string) {
         this.watchlistService.remove$.next(movieId)
         console.log('Undo action triggered');

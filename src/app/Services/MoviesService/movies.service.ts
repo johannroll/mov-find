@@ -148,14 +148,14 @@ private options = {
   searchFormControl = new FormControl();
 
   private searchChanged$ = this.searchFormControl.valueChanges.pipe(
-    debounceTime(500),
+    debounceTime(600),
     distinctUntilChanged(),
     tap(() => this.searchState.update((state) => ({
       ...state,
       results: [],
       loading: true,
     }))),
-    switchMap((searchterm) => this.fetchSearchResults(searchterm))
+    switchMap((searchterm) =>  this.fetchSearchResults(searchterm))
   );
   
   private moviesByGenre$ = this.genre$.pipe(

@@ -23,6 +23,7 @@ import { SnackbarService } from './Services/SnackbarService/snackbar.service';
 import { NetworkConnectionService } from './shared/utils/network-connection.service';
 import { RouteNameService } from './shared/utils/route-name.service';
 import { SearchFocusService } from './shared/utils/search-focus.service';
+import { stopPropagation } from './shared/utils/stop-propagation.directive';
 
 
 @Component({
@@ -46,7 +47,8 @@ import { SearchFocusService } from './shared/utils/search-focus.service';
     MatInputModule,
     MatToolbarModule,
     MatTabsModule,
-    SearchbarComponent
+    SearchbarComponent,
+    stopPropagation
 
   ],
   template: `
@@ -84,7 +86,7 @@ import { SearchFocusService } from './shared/utils/search-focus.service';
                 </button>
             </li>
           </ul>
-          <div class="searchbar-wrapper" [class.searchbar-open]="movieService.formFocus()">
+          <div class="searchbar-wrapper searchbar-margin" [class.searchbar-open]="movieService.formFocus()">
             <app-searchbar
             [searchFormControl]="movieService.searchFormControl"
             [searchResults]="movieService.searchResults()"
@@ -191,9 +193,10 @@ import { SearchFocusService } from './shared/utils/search-focus.service';
     
     .searchbar-open {
       width: 100%;
-      justify-content: space-evenly;
-      margin-right: auto;
-      
+    }
+
+    .close-searchbar {
+      margin-left: 15px;
     }
 
     .search-menu {
@@ -310,6 +313,15 @@ import { SearchFocusService } from './shared/utils/search-focus.service';
     .selection h1 {
       font-size: 1.2rem;
     }
+
+    .searchbar-margin {
+      justify-content: space-evenly;
+
+    }
+
+    .close-searchbar {
+      margin-left: 0px;
+    }
   }
 
   @media (max-width: 615px) {
@@ -406,6 +418,7 @@ export class AppComponent {
       }
       
       if (network && this.networkService.state().connectionCount > 1) {
+        this.snackbarService.dismissSnackbar();
         this.snackbarService.displaySuccess('Connection restored');
         location.reload();
       }
@@ -416,14 +429,12 @@ export class AppComponent {
         this.drawer.close()
       }
     })
-    
   }
   
   ngAfterViewInit() {
     this.drawer.openedChange.pipe(takeUntil(this.destroy$)).subscribe((isOpen) => {
       console.log('Drawer state changed. Is open:', isOpen);
       this.movieService.setDrawerState(isOpen);
-      // this.searchFocusService.useElement(this.drawerElement.nativeElement);
     });
   };
 
@@ -437,7 +448,6 @@ export class AppComponent {
   }
 
   updateFormFocusState() {
-    this.movieService.searchFormControl.setValue('');
     this.movieService.searchState.update((state) => ({...state, formFocus: false }))
   }
 
