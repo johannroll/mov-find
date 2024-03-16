@@ -29,7 +29,7 @@ import { RouteNameService } from "../../utils/route-name.service";
                    
                 >
                 @if (movieService.formFocus()) {
-                    <button disableRipple="true" mat-icon-button color="accent" [class.spinner]="movieService.searchLoading()" class="custom-mat-icon-button" [disabled]="movieService.searchLoading()" (pointerdown)="clearSearch($event); searchResults = []">
+                    <button disableRipple mat-icon-button color="accent" [class.spinner]="movieService.searchLoading() && searchFormControl.value.length > 0" class="custom-mat-icon-button" [disabled]="movieService.searchLoading()" (pointerdown)="clearSearch($event); searchResults = []">
                         @if (!movieService.searchLoading()) {
                             <mat-icon>close</mat-icon>
                         }
