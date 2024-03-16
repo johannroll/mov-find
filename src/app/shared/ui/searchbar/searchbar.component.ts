@@ -103,6 +103,11 @@ export class SearchbarComponent implements OnInit {
     @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
     constructor() {
+        effect(() => {
+            if (this.movieService.formFocus() === false) {
+                this.removeFocus();
+            }
+        })
     }
 
     ngOnInit() {

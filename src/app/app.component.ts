@@ -471,7 +471,7 @@ export class AppComponent {
   }
 
   updateFormFocusState() {
-    this.movieService.searchState.update((state) => ({...state, formFocus: false }))
     this.movieService.searchFormControl.setValue('');
+    this.movieService.searchState.update((state) => ({...state, formFocus: false }))
   }
 }
