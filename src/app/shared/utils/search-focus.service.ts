@@ -51,12 +51,12 @@ export class SearchFocusService {
       };
 
       removeFocus() {
-        const element = document.getElementById('searchInput') as HTMLElement;
-            if (this.isFocused) {
-                setTimeout(() => {
+        const element = document.getElementById('searchInput');
+            if (element) {
+              
                     console.log('movie detail route and Focus true');
                     element.blur();
-                }, 0)
+              
             }
       }
     

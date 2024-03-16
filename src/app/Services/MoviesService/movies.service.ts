@@ -46,6 +46,11 @@ export interface DrawerState {
   open: boolean;
 }
 
+export interface CountryInfo {
+  countryName: string;
+  [key: string]: any;
+}
+
 
 @Injectable({
     providedIn: 'root',
@@ -131,8 +136,9 @@ private options = {
   searchResults = computed(() => this.searchState().results);
   searchLoading = computed(() => this.searchState().loading);
   formFocus = computed(() => this.searchState().formFocus);
-  drawerOpen = computed(() => this.drawerState().open)
-  
+  drawerOpen = computed(() => this.drawerState().open);
+  countriesSorted = computed(() => this.sortCountries(this.movieDetailState().data[3]));
+   
   //source
   genres$ = this.getGenres();
   pagination$ = new Subject<string | null>();
@@ -405,6 +411,7 @@ private options = {
           this.handleError(err)
           return EMPTY}),
         map(( response ) => {
+              this.sortCountries(response)
               return response
           }
         )
@@ -510,4 +517,27 @@ private options = {
     }))
     console.log(this.drawerOpen());
   }
+
+  sortCountries(watchProvider: any = { results: {} }) {
+    const newObject: { [key: string]: CountryInfo } = Object.keys(watchProvider.results).reduce((acc: { [key: string]: CountryInfo }, countryCode) => {
+      const countryObject: CountryInfo = { ...watchProvider.results[countryCode], countryName: this.getCountryName(countryCode) };
+      
+      acc[countryCode] = countryObject;
+      return acc;
+    }, {});
+
+    const sortedArray = Object.entries(newObject).sort((a, b) => {
+      const countryNameA = a[1].countryName.toUpperCase(); 
+      const countryNameB = b[1].countryName.toUpperCase();
+      return countryNameA.localeCompare(countryNameB);
+    });
+
+    const orderedData = sortedArray.map(([key, value]) => ({ key, ...value }));
+    return orderedData;
+  }
+
+  getCountryName(countryCode: any): string | undefined {
+    const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+    return regionNames.of(countryCode);
+}
 }

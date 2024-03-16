@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, effect, inject } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, inject } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -41,9 +41,9 @@ import { RouteNameService } from "../../utils/route-name.service";
                         </label>
                     </div>
                 }
-                <mat-autocomplete #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
+                <mat-autocomplete autoSelectActiveOption="false" #auto="matAutocomplete" class="custom-autocomplete" panelWidth="340px" panelClass="custom-autocomplete">
                     @for (movie of searchResults; track $index) {
-                        <mat-option [routerLink]="['detail', movie.id]" (click)="this.movieService.movieDetailId$.next(+movie.id); clearSearch($event)" [value]="movie.title" >
+                        <mat-option [routerLink]="['detail', movie.id]" (click)="this.movieService.movieDetailId$.next(+movie.id); clearSearch($event); removeFocus()" [value]="movie.title" >
                             <div class="search-item-container">
                                 <div>
                                     @if ($index < 4) {
@@ -110,6 +110,12 @@ export class SearchbarComponent implements OnInit {
         this.searchFormControl.setValue('');
         event.preventDefault(); 
     }
+
+    removeFocus() {
+        if (this.searchInput && this.searchInput.nativeElement) {
+        this.searchInput.nativeElement.blur();
+        }
+   } 
 
     private windowBlurHandler = (): void => {
         if (this.autocompleteTrigger) {

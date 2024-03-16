@@ -302,8 +302,8 @@ import { RouteNameService } from "../shared/utils/route-name.service";
                                         @if ((movieService.movieDetail()[3].results | json) === '{}') {
                                             <mat-option>None</mat-option>
                                         }
-                                        @for (country of movieService.movieDetail()[3].results | keyvalue; track country.key) {
-                                        <mat-option [value]="country.key">{{ getCountryName(country.key) }}</mat-option>
+                                        @for (country of movieService.countriesSorted(); track country.key) {
+                                        <mat-option [value]="country.key">{{ country.countryName }}</mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -424,7 +424,6 @@ export default class DetailComponent {
    type = signal<any>(null);
 
    ngAfterViewInit() {
-    this.removeFocus();
        window.scrollTo(0, 0);
        if (this.params()?.get('id') !== null) {
            this.movieService.movieDetailId$.next(Number(this.params()?.get('id')))
@@ -436,6 +435,7 @@ export default class DetailComponent {
            this.country.set(null)
            this.type.set(null)
        }
+
         
     }
 
