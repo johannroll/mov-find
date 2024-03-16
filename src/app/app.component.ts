@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, computed, effect, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterOutlet, Router, RouterLink } from '@angular/router';
 import { MoviesService } from './Services/MoviesService/movies.service';
 import { MatButtonModule } from '@angular/material/button'
@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOption } from '@angular/material/core';
 import { MatLabel } from '@angular/material/form-field';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {AsyncPipe} from '@angular/common';
+import {AsyncPipe, Location} from '@angular/common';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -48,18 +48,23 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
     MatToolbarModule,
     MatTabsModule,
     SearchbarComponent,
-    stopPropagation
+    stopPropagation,
+    
 
   ],
   template: `
 
     <div class="toolbar">
-        @if (!movieService.formFocus()) {
+        @if (routeService.currentRoute() === 'detail' || routeService.currentRoute() === 'actor') {
+          <button class="back-btn-toolbar" mat-icon-button (click)="back().back()">
+              <mat-icon>arrow_back</mat-icon>
+          </button>
+        }
+        @if (!movieService.formFocus() && routeService.currentRoute() === 'home') {
           <button class="menu-button" mat-icon-button (click)="drawer.toggle()">
             <mat-icon>menu</mat-icon>
           </button>
-        }
-     
+        }  
         <ul class="nav-items hide">
             <li>
               <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop})">Home</a>
@@ -86,16 +91,18 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
                 </button>
             </li>
           </ul>
-          <div class="searchbar-wrapper searchbar-margin" [class.searchbar-open]="movieService.formFocus()">
-            <app-searchbar
-            [searchFormControl]="movieService.searchFormControl"
-            [searchResults]="movieService.searchResults()"
-            (closeMenu)="drawer.close()"
-            ></app-searchbar>
-            @if (movieService.formFocus()) {
-                <button class="close-searchbar" disableRipple [class.hide-cnacel-btn]="!movieService.formFocus()" mat-button (click)="updateFormFocusState()">cancel</button>
-            }
-          </div>
+          @if (routeService.currentRoute() === 'home') {
+            <div class="searchbar-wrapper searchbar-margin" [class.searchbar-open]="movieService.formFocus()">
+              <app-searchbar
+              [searchFormControl]="movieService.searchFormControl"
+              [searchResults]="movieService.searchResults()"
+              (closeMenu)="drawer.close()"
+              ></app-searchbar>
+              @if (movieService.formFocus()) {
+                  <button class="close-searchbar" disableRipple [class.hide-cnacel-btn]="!movieService.formFocus()" mat-button (click)="updateFormFocusState()">cancel</button>
+              }
+            </div>
+          }
           @if (!movieService.formFocus()) {
             <ul class="nav-items category">
               @if (routeService.currentRoute() === 'detail' || routeService.currentRoute() === 'actor') {
@@ -182,6 +189,10 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
       height: 60px;
       box-shadow: 0px 3px 30px 3px rgb(230,230,230,0.2);
       background: rgb(58,58,58);
+    }
+
+    .back-btn-toolbar {
+      margin-right: auto;
     }
 
     .searchbar-wrapper {
@@ -368,6 +379,7 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
   `],
 })
 export class AppComponent {
+  location = inject(Location)
   movieService = inject(MoviesService)
   storageService = inject(StorageService)
   snackbarService = inject(SnackbarService)
@@ -383,6 +395,8 @@ export class AppComponent {
   params = toSignal(this.activatedRoute.paramMap);
 
   paramId = computed(() => this.params()?.get('id'));
+
+  back = signal(this.location);
 
   stateCtrl = new FormControl('');
   filteredStates!: Observable<any[]>;

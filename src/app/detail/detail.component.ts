@@ -248,9 +248,9 @@ import { RouteNameService } from "../shared/utils/route-name.service";
         `
     ],
     template:`
-        <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
+        <!-- <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
-        </button>
+        </button> -->
         @if (movieService.movieDetailState().loading) {
             <div class="loader-wrapper">
                 <div class="loader"></div>
@@ -414,7 +414,6 @@ export default class DetailComponent {
 
     @ViewChild(MatSelect) matSelect!: MatSelect;
 
-
     params = toSignal(this.route.paramMap);
     back = signal(this.location);
     
@@ -428,14 +427,6 @@ export default class DetailComponent {
        if (this.params()?.get('id') !== null) {
            this.movieService.movieDetailId$.next(Number(this.params()?.get('id')))
        }
-   }
-
-   constructor() {
-       if(this.routeNameService.currentRoute() ===  'detail') {
-           this.country.set(null)
-           this.type.set(null)
-       }
-        
     }
 
    removeFocus() {

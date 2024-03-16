@@ -67,9 +67,9 @@ import { MatIconModule } from '@angular/material/icon';
 
     `],
     template: `
-        <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
+        <!-- <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
-        </button>
+        </button> -->
         <div class="container">
             <div class="actor-detail-container">
                 @if (movieService.loadingActor()) {
