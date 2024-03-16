@@ -55,7 +55,7 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
   template: `
 
     <div class="toolbar">
-        @if (routeService.currentRoute() === 'detail' || routeService.currentRoute() === 'actor') {
+        @if (routeService.currentRoute() !== 'home') {
           <button class="back-btn-toolbar" mat-icon-button (click)="back().back()">
               <mat-icon>arrow_back</mat-icon>
           </button>
@@ -110,7 +110,7 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
                    <h3>{{ movieService.movieDetail()[0]?.title }}</h3>
                 </li>
               } @else {
-                @if (movieService.state().genre === null) {
+                @if (movieService.state().genre === null && routeService.currentRoute() !== 'watchlist') {
                   <li class="selection">
                      <h1>{{ movieService.selection() }}</h1>
                   </li>
@@ -119,6 +119,12 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
                      <h1>{{ movieService.genre() }}</h1>
                   </li>
                 }
+                 @if (routeService.currentRoute() === 'watchlist') {
+                  <li class="selection">
+                     <h1>Watchlist</h1>
+                  </li>
+                }
+
               }
             </ul>
           }

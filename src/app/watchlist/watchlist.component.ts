@@ -11,9 +11,9 @@ import { MatButtonModule } from "@angular/material/button";
     selector: 'app-watchlist',
     imports: [WatchlistListComponent, MatIconModule, MatButtonModule],
     template: `
-        <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
+        <!-- <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
             <mat-icon>arrow_back</mat-icon>
-        </button>
+        </button> -->
         <div class="container">
             @if (!watchlistService.loaded()) {
                 <div class="loader"></div>
