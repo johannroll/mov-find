@@ -323,7 +323,7 @@ import { RouteNameService } from "../shared/utils/route-name.service";
                                 </mat-form-field>
                                 }
                             </div>
-                            @if (movieService.movieDetail()[3].results.length != {} && movieService.movieDetail()[3].results != undefined && country() !== null && type() !== null) {
+                            @if (country() !== null && type() !== null) {
                         
                                 <span class="provider-container">
                                     @for (provider of movieService.movieDetail()[3].results[country()][type()]; track $index) {
@@ -435,7 +435,6 @@ export default class DetailComponent {
            this.country.set(null)
            this.type.set(null)
        }
-
         
     }
 
