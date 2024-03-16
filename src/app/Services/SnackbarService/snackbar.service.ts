@@ -1,9 +1,6 @@
 import { Injectable, inject } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { WatchlistService } from "../../watchlist/data-access/watchlist.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { NetworkConnectionService } from "../../shared/utils/network-connection.service";
 
 @Injectable({
     providedIn: 'root'

@@ -67,9 +67,6 @@ import { MatIconModule } from '@angular/material/icon';
 
     `],
     template: `
-        <!-- <button mat-mini-fab color="accent" class="btn-back" (click)="back().back()">
-            <mat-icon>arrow_back</mat-icon>
-        </button> -->
         <div class="container">
             <div class="actor-detail-container">
                 @if (movieService.loadingActor()) {
@@ -78,28 +75,27 @@ import { MatIconModule } from '@angular/material/icon';
                     </div>
                 } @else {
             
-                        <img class="image" priority  [ngSrc]="actor().profile_path !== null ? 'https://image.tmdb.org/t/p/w500/' + actor().profile_path : 'https://fakeimg.pl/600x750?text=No+image'" width="320" height="450">
-                        <div class="actor-details">
-                            <h2> {{ actor().name }}</h2>
-                            @if (actor().place_of_birth) {
-                                <p><span class="bold">Birthplace </span>{{ actor().place_of_birth }}</p>
-                            } @else {
-                                <p><span class="bold">Birthplace </span>no information</p>
-                            }
-                            @if (actor().birthday) {
-                                <p><span class="bold">Age </span>{{ calculateActorAge(actor().birthday) }}</p>
-                            } @else {
-                                <p><span class="bold">Age </span>no information</p>
-                            }
-                            <p><span class="bold">Biography </span></p>
-                            @if (actor().biography) {
-                                <p class="actor-description">{{ actor().biography }}</p>
-                            } @else {
-                                <p class="actor-description">no information</p>
-                                
-                            }
-                        </div>
-            
+                    <img class="image" priority  [ngSrc]="actor().profile_path !== null ? 'https://image.tmdb.org/t/p/w500/' + actor().profile_path : 'https://fakeimg.pl/600x750?text=No+image'" width="320" height="450">
+                    <div class="actor-details">
+                        <h2> {{ actor().name }}</h2>
+                        @if (actor().place_of_birth) {
+                            <p><span class="bold">Birthplace </span>{{ actor().place_of_birth }}</p>
+                        } @else {
+                            <p><span class="bold">Birthplace </span>no information</p>
+                        }
+                        @if (actor().birthday) {
+                            <p><span class="bold">Age </span>{{ calculateActorAge(actor().birthday) }}</p>
+                        } @else {
+                            <p><span class="bold">Age </span>no information</p>
+                        }
+                        <p><span class="bold">Biography </span></p>
+                        @if (actor().biography) {
+                            <p class="actor-description">{{ actor().biography }}</p>
+                        } @else {
+                            <p class="actor-description">no information</p>
+                            
+                        }
+                    </div>
                 }
             </div>
         </div>

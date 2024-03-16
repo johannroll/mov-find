@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, inject } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, effect, inject } from "@angular/core";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -102,13 +102,16 @@ export class SearchbarComponent implements OnInit {
     @ViewChild('searchInput') searchInput!: ElementRef;
     @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
+    constructor() {
+    }
+
     ngOnInit() {
         window.addEventListener('blur', this.windowBlurHandler);
       }
 
     clearSearch(event: Event) {
-        this.searchFormControl.setValue('');
         event.preventDefault(); 
+        this.searchFormControl.setValue('');
     }
 
     removeFocus() {

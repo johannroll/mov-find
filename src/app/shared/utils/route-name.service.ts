@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { NavigationEnd, Router, RouterEvent, Event } from "@angular/router";
+import { NavigationEnd, Router, Event } from "@angular/router";
 import { BehaviorSubject, filter, tap } from "rxjs";
 
 export interface UrlState {

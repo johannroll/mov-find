@@ -34,9 +34,6 @@ constructor() {
     private updateNetworkStatus() {
         this.networkStatus.next(navigator.onLine)
     }
-
-
-
 }
 
   

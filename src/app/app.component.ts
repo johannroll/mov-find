@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { MatIconModule } from '@angular/material/icon';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
-import { MatDrawer, MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOption } from '@angular/material/core';
@@ -56,7 +56,7 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
 
     <div class="toolbar">
         @if (routeService.currentRoute() !== 'home') {
-          <button class="back-btn-toolbar" mat-icon-button (click)="back().back()">
+          <button class="back-btn-toolbar"  disableRipple mat-icon-button (click)="back().back()">
               <mat-icon>arrow_back</mat-icon>
           </button>
         }
@@ -64,33 +64,36 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
           <button class="menu-button" mat-icon-button (click)="drawer.toggle()">
             <mat-icon>menu</mat-icon>
           </button>
+        }
+        @if (routeService.currentRoute() === 'home') {
+
+          <ul class="nav-items hide">
+              <li>
+                <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop})">Home</a>
+              </li>
+              <li>
+                <button mat-button [matMenuTriggerFor]="categories">Categories</button>
+                <mat-menu class="category-menu" #categories="matMenu">
+                  @for(item of movieService.movielist(); track $index) {
+                    <button routerLink="/home" (click)="movieService.movielist$.next(item)"  mat-menu-item>{{ movieService.formatString(item) }}</button>
+                  }
+                </mat-menu>
+              </li>
+              <li>
+                <button mat-button [matMenuTriggerFor]="genres">Genres</button>
+                <mat-menu class="genre-menu" #genres="matMenu">
+                  @for(genre of movieService.genres(); track genre.id) {
+                    <button routerLink="/home" (click)="movieService.genre$.next(genre)" mat-menu-item>{{ genre.name }}</button>
+                  }
+                </mat-menu>
+              </li>
+              <li>
+                  <button  routerLink="/watchlist" mat-icon-button>
+                    <mat-icon>favorite</mat-icon>
+                  </button>
+              </li>
+            </ul>
         }  
-        <ul class="nav-items hide">
-            <li>
-              <a mat-button routerLink="/home" (click)="movieService.scrollState.set({ scrollTo: this.movieService.scrollToTop})">Home</a>
-            </li>
-            <li>
-              <button mat-button [matMenuTriggerFor]="categories">Categories</button>
-              <mat-menu class="category-menu" #categories="matMenu">
-                @for(item of movieService.movielist(); track $index) {
-                  <button routerLink="/home" (click)="movieService.movielist$.next(item)"  mat-menu-item>{{ movieService.formatString(item) }}</button>
-                }
-              </mat-menu>
-            </li>
-            <li>
-              <button mat-button [matMenuTriggerFor]="genres">Genres</button>
-              <mat-menu class="genre-menu" #genres="matMenu">
-                @for(genre of movieService.genres(); track genre.id) {
-                  <button routerLink="/home" (click)="movieService.genre$.next(genre)" mat-menu-item>{{ genre.name }}</button>
-                }
-              </mat-menu>
-            </li>
-            <li>
-                <button  routerLink="/watchlist" mat-icon-button>
-                  <mat-icon>favorite</mat-icon>
-                </button>
-            </li>
-          </ul>
           @if (routeService.currentRoute() === 'home') {
             <div class="searchbar-wrapper searchbar-margin" [class.searchbar-open]="movieService.formFocus()">
               <app-searchbar
@@ -99,7 +102,7 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
               (closeMenu)="drawer.close()"
               ></app-searchbar>
               @if (movieService.formFocus()) {
-                  <button class="close-searchbar" disableRipple [class.hide-cnacel-btn]="!movieService.formFocus()" mat-button (click)="updateFormFocusState()">cancel</button>
+                  <button class="close-searchbar" disableRipple [class.hide-cnacel-btn]="!movieService.formFocus()" mat-button (pointerdown)="updateFormFocusState()">cancel</button>
               }
             </div>
           }
@@ -114,7 +117,7 @@ import { stopPropagation } from './shared/utils/stop-propagation.directive';
                   <li class="selection">
                      <h1>{{ movieService.selection() }}</h1>
                   </li>
-                }  @else {
+                }  @else if(routeService.currentRoute() !== 'watchlist') {
                   <li class="selection">
                      <h1>{{ movieService.genre() }}</h1>
                   </li>
@@ -469,6 +472,6 @@ export class AppComponent {
 
   updateFormFocusState() {
     this.movieService.searchState.update((state) => ({...state, formFocus: false }))
+    this.movieService.searchFormControl.setValue('');
   }
-
 }
